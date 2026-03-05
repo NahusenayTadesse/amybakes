@@ -1,10 +1,10 @@
 import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, sql, min } from 'drizzle-orm';
 
 import { add, edit } from './schema';
 import { db } from '$lib/server/db';
-import { orders, orderItems, products, customers } from '$lib/server/db/schema';
+import { orders, orderItems, products, customers, prices } from '$lib/server/db/schema';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -14,23 +14,24 @@ export const load: PageServerLoad = async () => {
 	const fetchedProducts = await db
 		.select({
 			value: products.id,
-			name: sql<string>`
-TRIM(
-  CONCAT(
-    ${products.name},
-    COALESCE(CONCAT(' ', ${products.price}, ' ETB'), ''),
-    COALESCE(CONCAT(' ', ${products.quantity}, ' Left'), '')
-  )
-)`,
-
-			price: products.price
+			name: products.name
 		})
 		.from(products);
+
+	const fetchedPrices = await db
+		.select({
+			value: sql<string>`CONCAT(${prices.price}, ' ', ${prices.amount})`,
+			name: sql<string>`CONCAT(${prices.price}, ' ', ${prices.amount}, ' pieces')`,
+			productId: prices.productId,
+			price: prices.price,
+			amount: prices.amount
+		})
+		.from(prices);
 
 	const fetchedCustomers = await db
 		.select({
 			value: customers.id,
-			name: customers.name
+			name: sql<string>`CONCAT(${customers.name}, ' ', ${customers.phone})`
 		})
 		.from(customers);
 
@@ -39,6 +40,7 @@ TRIM(
 			id: orders.id,
 			name: customers.name,
 			customerId: customers.id,
+			phone: customers.phone,
 			status: orders.status
 		})
 		.from(orders)
@@ -50,6 +52,7 @@ TRIM(
 			id: orderItems.id,
 			orderId: orderItems.orderId,
 			product: products.name,
+			amount: orderItems.amount,
 			quantity: orderItems.quantity,
 			productId: orderItems.productId,
 			price: orderItems.price,
@@ -65,7 +68,8 @@ TRIM(
 		allData,
 		allItems,
 		fetchedProducts,
-		fetchedCustomers
+		fetchedCustomers,
+		fetchedPrices
 	};
 };
 
@@ -80,10 +84,6 @@ export const actions: Actions = {
 
 		try {
 			await db.transaction(async (tx) => {
-				const fetchedProducts = await tx // ← tx, not db
-					.select({ value: products.id, price: products.price })
-					.from(products);
-
 				const [orderId] = await tx
 					.insert(orders)
 					.values({ customerId: customer, status })
@@ -94,8 +94,9 @@ export const actions: Actions = {
 						selectedProducts.map((product) => ({
 							orderId: orderId.id,
 							productId: Number(product.product),
+							amount: splitNumbers(product.amount).amount,
 							quantity: Number(product.quantity),
-							price: getPrice(fetchedProducts, Number(product.product)),
+							price: splitNumbers(product.amount).price,
 							createdBy: locals?.user?.id
 						}))
 					);
@@ -112,6 +113,7 @@ export const actions: Actions = {
 	},
 	edit: async ({ request, locals }) => {
 		const form = await superValidate(request, zod4(edit));
+		console.log(form.data);
 		if (!form.valid) {
 			return message(form, { type: 'error', text: 'Please check the form for Errors' });
 		}
@@ -120,10 +122,6 @@ export const actions: Actions = {
 
 		try {
 			await db.transaction(async (tx) => {
-				const fetchedProducts = await tx // ← tx, not db
-					.select({ value: products.id, price: products.price })
-					.from(products);
-
 				await tx
 					.update(orders)
 					.set({ customerId: customer, status })
@@ -135,8 +133,9 @@ export const actions: Actions = {
 						selectedProducts.map((product) => ({
 							orderId: Number(id),
 							productId: Number(product.product),
+							amount: splitNumbers(product.amount).amount,
 							quantity: Number(product.quantity),
-							price: getPrice(fetchedProducts, Number(product.product))
+							price: splitNumbers(product.amount).price
 						}))
 					);
 				}
@@ -144,6 +143,7 @@ export const actions: Actions = {
 
 			return message(form, { type: 'success', text: 'Order Successfully Updated' });
 		} catch (err) {
+			console.error(err?.message);
 			return message(form, {
 				type: 'error',
 				text: 'Error Updating Orders: ' + err?.message
@@ -155,4 +155,11 @@ export const actions: Actions = {
 function getPrice(list: Array<{ value: number; price: string }>, value: number): number {
 	const item = list.find((i) => i.value === value);
 	return item ? Number(item.price) : 0;
+}
+function splitNumbers(input: string) {
+	const [first, second] = input.split(' ');
+	return {
+		price: Number(first),
+		amount: Number(second)
+	};
 }

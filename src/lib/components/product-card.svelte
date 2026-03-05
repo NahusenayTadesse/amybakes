@@ -10,11 +10,12 @@
 		productId: number;
 		productName: string;
 		price: number | string;
+		amount?: number | string;
 		image?: string;
 		category?: string;
 	};
 
-	let { productId, productName, price, image, category }: Props = $props();
+	let { productId, productName, price, amount, image, category }: Props = $props();
 	const cart = useCart();
 
 	let justAdded = $state(false);
@@ -33,7 +34,7 @@
 	function addToCart() {
 		if (justAdded) return; // Prevent double-clicks during animation
 
-		cart.addItem({ productId, productName, price: numericPrice });
+		cart.addItem({ productId, amount, productName, price: numericPrice });
 		justAdded = true;
 
 		toast.success(`${productName} added to cart`, {

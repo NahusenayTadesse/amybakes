@@ -7,13 +7,9 @@ import { loginSchema } from '$lib/ZodSchema';
 import { redirect } from 'sveltekit-flash-message/server';
 import { auth } from '$lib/server/auth';
 
-export const load: PageServerLoad = async ({ locals, parent }) => {
+export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
-		const roleName = (await parent()).roleName;
-
-		if (roleName === 'Admin') {
-			return redirect(302, '/dashboard');
-		} else return redirect(302, '/');
+		return redirect(302, '/dashboard');
 	}
 	const form = await superValidate(zod4(loginSchema));
 

@@ -102,6 +102,7 @@ export const orderItems = mysqlTable('order_items', {
 	orderId: int('order_id').references(() => orders.id),
 	productId: int('product_id').references(() => products.id),
 	quantity: int('quantity').notNull(),
+	amount: int('amount').notNull(),
 	price: decimal('price', { precision: 10, scale: 2 }).notNull(),
 	...secureFields
 });

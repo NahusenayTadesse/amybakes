@@ -7,39 +7,94 @@
 	setCart();
 	let { data } = $props();
 
-	let product = $derived(data?.productList);
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
 	import Hero from '$lib/components/hero.svelte';
 	import About from '$lib/components/about.svelte';
 	import Accordion from '$lib/components/accordion.svelte';
+
+	const groupedProducts = $derived(
+		data?.productList.reduce((acc, product) => {
+			const category = product.category || 'Uncategorized';
+			if (!acc[category]) {
+				acc[category] = [];
+			}
+			acc[category].push(product);
+			return acc;
+		}, {})
+	);
 </script>
 
 <Hero />
 <About />
 
-<!-- Main Content -->
-<main class="container mx-auto px-4 py-8 pb-24">
-	<div class="mb-8">
-		<h2 class="mb-2 text-2xl font-bold">Products</h2>
-		<p class="text-muted-foreground">Click on products to add them to your cart.</p>
+<header class="my-16 text-center">
+	<div class="mb-6 inline-flex items-center rounded-full bg-secondary px-4 py-1.5">
+		<span class="text-xs font-bold tracking-wider text-secondary-foreground uppercase">
+			Fresh from the oven
+		</span>
 	</div>
 
-	<Carousel.Root
-		opts={{
-			align: 'start'
-		}}
-		class="w-full"
-	>
-		<Carousel.Content>
-			{#each product as product (product.productId)}
-				<Carousel.Item class="w-full md:basis-1/2 lg:basis-1/5">
-					<ProductCard {...product} />
-				</Carousel.Item>
-			{/each}
-		</Carousel.Content>
-		<Carousel.Previous />
-		<Carousel.Next />
-	</Carousel.Root>
+	<h1 class="mb-4 text-4xl font-extrabold tracking-tight text-foreground lg:text-6xl">
+		Our Signature <span class="text-primary">Bakes</span>
+	</h1>
+
+	<p class="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground">
+		Explore our handcrafted selection of decadent
+		<span
+			class="font-semibold text-foreground underline decoration-primary/30 decoration-2 underline-offset-4"
+			>cookies</span
+		>
+		and jumbo
+		<span
+			class="font-semibold text-foreground underline decoration-primary/30 decoration-2 underline-offset-4"
+			>muffins</span
+		>, baked daily with premium ingredients.
+	</p>
+</header>
+
+<hr class="mb-12 border-muted/30" />
+<main class="container mx-auto px-4 py-12 pb-24">
+	{#each Object.entries(groupedProducts) as [categoryName, products] (categoryName)}
+		<section class="mb-16 last:mb-0">
+			<div class="mb-8 flex flex-col items-start gap-1 border-l-4 border-primary pl-6">
+				<h2 class="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+					{categoryName}
+				</h2>
+				<p class="text-sm font-medium tracking-widest text-muted-foreground uppercase">
+					Freshly baked & ready for your box
+				</p>
+			</div>
+
+			<div class="relative px-2">
+				<Carousel.Root
+					opts={{
+						align: 'start',
+						loop: true
+					}}
+					class="w-full"
+				>
+					<Carousel.Content class="-ml-4">
+						{#each products as product (product.productId)}
+							<Carousel.Item class="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+								<div class="group h-full transition-transform duration-300 hover:-translate-y-2">
+									<ProductCard {...product} />
+								</div>
+							</Carousel.Item>
+						{/each}
+					</Carousel.Content>
+
+					<div class="hidden lg:block">
+						<Carousel.Previous
+							class="border-secondary bg-background text-secondary-foreground hover:bg-secondary"
+						/>
+						<Carousel.Next
+							class="border-secondary bg-background text-secondary-foreground hover:bg-secondary"
+						/>
+					</div>
+				</Carousel.Root>
+			</div>
+		</section>
+	{/each}
 </main>
 
 <Accordion />

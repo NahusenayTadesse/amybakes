@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { toast } from 'svelte-sonner';
 	import {
 		Card,
@@ -126,4 +126,4 @@
 			</CardFooter>
 		{/if}
 	</Card>
-</div>
+</div> -->

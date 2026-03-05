@@ -172,7 +172,7 @@
 		{/if}
 
 		{#if $errors[name]}
-			<p class="text-red-500">{$errors[name]._errors.join(', ')}</p>
+			<p class="text-red-500">{$errors[name]?._errors.join(', ')}</p>
 		{/if}
 	</Label>
 </div>

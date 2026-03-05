@@ -6,6 +6,7 @@ import { edit, adjust, damaged, editGallery } from './schema';
 import { db } from '$lib/server/db';
 import {
 	products,
+	prices as priceList,
 	productImages,
 	productAdjustments,
 	damagedProducts,
@@ -22,6 +23,7 @@ export const actions: Actions = {
 	editProduct: async ({ request, cookies, locals, params }) => {
 		const { id } = params;
 		const form = await superValidate(request, zod4(edit));
+		console.log(form);
 
 		if (!form.valid) {
 			// Stay on the same page and set a flash message
@@ -29,8 +31,7 @@ export const actions: Actions = {
 			return fail(400, { form });
 		}
 
-		const { productName, category, description, quantity, price, supplier, reorderLevel, image } =
-			form.data;
+		const { productName, category, description, prices, image } = form.data;
 
 		try {
 			if (image) {
@@ -42,10 +43,7 @@ export const actions: Actions = {
 						name: productName,
 						description,
 						categoryId: category,
-						quantity,
-						price: price.toString(),
-						supplierId: supplier,
-						reorderLevel,
+
 						updatedBy: locals?.user?.id,
 						featuredImage
 					})
@@ -57,20 +55,25 @@ export const actions: Actions = {
 						name: productName,
 						description,
 						categoryId: category,
-						quantity,
-						price: price.toString(),
-						supplierId: supplier,
-						reorderLevel,
 						updatedBy: locals?.user?.id
 					})
 					.where(eq(products.id, Number(id)));
 			}
+
+			const priceRecords = prices.map((p) => ({
+				productId: Number(id),
+				price: p.price,
+				amount: p.amount
+			}));
+			await db.delete(priceList).where(eq(priceList.productId, Number(id)));
+			await db.insert(priceList).values(priceRecords);
 
 			// Stay on the same page and set a flash message
 			setFlash({ type: 'success', message: 'Product Updated Successuflly Added' }, cookies);
 
 			return message(form, { type: 'success', text: 'Product Updated Successfully' });
 		} catch (err) {
+			console.error(err?.message);
 			setFlash({ type: 'error', message: 'Product Update Failed ' + err?.message }, cookies);
 
 			return message(form, { type: 'error', text: 'Product Update Failed' + err?.message });

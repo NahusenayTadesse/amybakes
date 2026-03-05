@@ -5,6 +5,8 @@
 	import DarkMode from './DarkMode.svelte';
 	let mobileMenuOpen = $state(false);
 
+	import { page } from '$app/state';
+
 	let { data } = $props();
 
 	const navLinks = [
@@ -19,14 +21,22 @@
 </script>
 
 <header
-	class="sticky top-0 z-50 w-full bg-background backdrop-blur supports-backdrop-filter:bg-background/10"
+	class="sticky top-0 z-50 w-full bg-primary backdrop-blur supports-backdrop-filter:bg-primary"
 >
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo -->
 			<div class="flex shrink-0 items-center gap-2">
-				<a href="/" class="flex items-center gap-2"><CookieIcon class="text-primary" /> Amy Bakes</a
-				>
+				<a href="/" class="inline-block">
+					<img
+						src="/logo.webp"
+						width="128"
+						height="96"
+						class="h-16 w-auto object-contain"
+						alt="Amy Bakes Home"
+						fetchpriority="high"
+					/>
+				</a>
 
 				<!-- <span class="text-xl font-bold text-foreground">Lalo Bakery Solution</span> -->
 			</div>
@@ -34,12 +44,12 @@
 			<!-- Desktop Navigation -->
 			<nav class="hidden items-center gap-8 md:flex">
 				{#each navLinks as link (link.href)}
-					<a
+					<Button
 						href={link.href}
-						class="text-sm font-medium text-foreground/70 transition-colors hover:text-foreground"
+						variant={page.url.pathname === link.href ? 'secondary' : 'primary'}
 					>
 						{link.label}
-					</a>
+					</Button>
 				{/each}
 			</nav>
 			<div class="flex flex-row items-center justify-end">

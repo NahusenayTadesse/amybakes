@@ -15,7 +15,9 @@
 		data: SuperValidated<Infer<EditGallery>>;
 		images: string[];
 	} = $props();
-	const { form, errors, enhance, delayed, message } = superForm(data, {});
+	const { form, errors, enhance, delayed, message } = superForm(data, {
+		dataType: 'json'
+	});
 	import { toast } from 'svelte-sonner';
 	$effect(() => {
 		$form.existing = images;

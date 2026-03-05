@@ -2,7 +2,7 @@ import { fail } from '@sveltejs/kit';
 import { eq, and } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema/';
+import * as table from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 import { message, superValidate, setError } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';

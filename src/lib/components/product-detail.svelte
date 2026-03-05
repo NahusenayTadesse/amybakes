@@ -2,15 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Card, CardContent } from '$lib/components/ui/card';
 	import { Badge } from '$lib/components/ui/badge';
-	import { fly } from 'svelte/transition';
-	import {
-		ShareIcon,
-		PlusIcon,
-		CheckIcon,
-		SparklesIcon,
-		TrendingUpIcon,
-		AwardIcon
-	} from '@lucide/svelte';
+	import { ShareIcon, PlusIcon, CheckIcon } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
 
 	type Props = {
@@ -21,9 +13,11 @@
 		image?: string;
 		category?: string;
 		images?: string[];
+		priceList?: { price: number | string; amount: number | string }[];
 	};
 
-	const { productId, productName, price, description, image, category, images }: Props = $props();
+	const { productId, productName, price, description, image, category, images, priceList }: Props =
+		$props();
 
 	let quantity = $state(1);
 
@@ -33,6 +27,13 @@
 
 	let justAdded = $state(false);
 
+	let currentPrice = $state(typeof price === 'string' ? parseFloat(price) : price);
+	let currentAmount = $state(
+		typeof priceList?.[0]?.amount === 'string'
+			? parseFloat(priceList?.[0]?.amount)
+			: priceList?.[0]?.amount
+	);
+
 	// Reusable formatter (performance friendly)
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
@@ -40,14 +41,16 @@
 	});
 
 	// Derived values for clarity
-	const numericPrice = $derived(typeof price === 'string' ? parseFloat(price) : price);
+	const numericPrice = $derived(
+		typeof price === 'string' ? parseFloat(currentPrice) : currentPrice
+	);
 	const formattedPrice = $derived(formatter.format(numericPrice));
 	const quantityInCart = $derived(cart.items.find((i) => i.productId === productId)?.quantity ?? 0);
 
 	function addToCart() {
 		if (justAdded) return; // Prevent double-clicks during animation
 
-		cart.addItem({ productId, productName, price: numericPrice });
+		cart.addItem({ productId, productName, price: numericPrice, amount: currentAmount });
 		justAdded = true;
 
 		toast.success(`${productName} added to cart`, {
@@ -73,18 +76,13 @@
 		}
 	};
 
-	const highlights = [
-		{ icon: AwardIcon, label: 'Halal Certified', description: 'All products meet Halal standards' },
-		{
-			icon: SparklesIcon,
-			label: 'Specialty Options',
-			description: 'Gluten-free, sugar-free & vegan'
-		},
-		{ icon: TrendingUpIcon, label: 'Since 2011', description: 'Over a decade of excellence' },
-		{ icon: CheckIcon, label: 'Quality Assured', description: 'Consistent standards guaranteed' }
-	];
-
 	let displayImage = $state(image);
+
+	function changePrice(product: { price: number | string; amount: number | string }) {
+		currentPrice = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
+		currentAmount =
+			typeof product.amount === 'string' ? parseFloat(product.amount) : product.amount;
+	}
 </script>
 
 <div class="min-h-dvh bg-linear-to-b from-background via-background to-muted/20">
@@ -145,30 +143,50 @@
 					</div>
 				</div>
 
-				<!-- Actions Section -->
+				<div class="max-w-xl p-4">
+					<h3 class="mb-4 text-sm font-semibold tracking-wider text-gray-500 uppercase">
+						Select Package
+					</h3>
 
-				<!-- Trust Badges -->
-				<div
-					transition:fly={{ y: 20, duration: 600, delay: 200 }}
-					class="mt-8 flex flex-row flex-wrap gap-4"
-				>
-					{#each highlights as highlight (highlight.label)}
-						<Card
-							class="shadow-lg-md shadow-lg-primary/5 hover:shadow-lg-lg hover:shadow-lg-primary/10 w-28 border-primary/20 transition-all duration-300"
-						>
-							<CardContent class="flex flex-col gap-2">
-								<div class="shrink-0">
-									<div class="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-										<highlight.icon class="size-6 text-primary" />
-									</div>
-								</div>
-								<div class="min-w-0 flex-1">
-									<p class="text-sm font-semibold text-foreground">{highlight.label}</p>
-									<p class="mt-1 text-xs text-foreground/60">{highlight.description}</p>
-								</div>
-							</CardContent>
-						</Card>
-					{/each}
+					<div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+						{#each priceList as product (product)}
+							{@const numericPrice =
+								typeof product.price === 'string' ? parseFloat(product.price) : product.price}
+							{@const isActive = currentPrice === numericPrice}
+
+							<button
+								onclick={() => changePrice(product)}
+								class="group relative flex flex-col items-center justify-center rounded-2xl border-2 border-foreground p-5 transition-all duration-200 ease-out
+								{isActive
+									? 'scale-[1.02] border-primary shadow-md'
+									: 'border-foreground hover:border-accent hover:shadow-sm'}"
+							>
+								<span
+									class="text-xl font-black tracking-tight transition-colors {isActive
+										? 'text-foreground'
+										: 'text-foreground/80'}"
+								>
+									{product.amount} Pieces
+								</span>
+
+								<span
+									class="text-xs font-medium tracking-wider uppercase transition-colors {isActive
+										? 'text-foreground'
+										: 'text-foreground/80'}"
+								>
+									{product.price} ETB
+								</span>
+
+								{#if isActive}
+									<Badge
+										class="absolute -top-2 px-4 text-[10px] font-bold tracking-widest  uppercase"
+									>
+										Selected
+									</Badge>
+								{/if}
+							</button>
+						{/each}
+					</div>
 				</div>
 
 				<div class="mt-8 flex flex-col gap-4">

@@ -15,6 +15,13 @@
       "when": 1772630758553,
       "tag": "0001_lazy_sunset_bain",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1772714384799,
+      "tag": "0002_grey_ultimatum",
+      "breakpoints": true
     }
   ]
 }

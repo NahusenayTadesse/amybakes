@@ -3,7 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
-	import { ShoppingCartIcon, ShoppingBasket, TrashIcon } from '@lucide/svelte';
+	import { ShoppingCartIcon, Cookie, TrashIcon } from '@lucide/svelte';
 	import CartItem from './cart-item.svelte';
 	import * as Popover from '$lib/components/ui/sheet/index.js';
 
@@ -25,7 +25,7 @@
 		class="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95"
 	>
 		<div class="relative">
-			<ShoppingBasket class="size-6" />
+			<Cookie class="size-6" />
 			{#if cart.totalItems > 0}
 				<Badge
 					variant="destructive"
@@ -49,7 +49,7 @@
 		{#if cart.items.length > 0}
 			<ScrollArea class="overscroll-behavior-contain min-h-0 flex-1">
 				<div class="flex flex-col gap-2 p-3">
-					{#each cart.items as item (item.productId)}
+					{#each cart.items as item (item)}
 						<CartItem {item} />
 					{/each}
 				</div>

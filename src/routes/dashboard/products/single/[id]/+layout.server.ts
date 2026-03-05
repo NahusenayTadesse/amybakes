@@ -10,9 +10,10 @@ import {
 	productSuppliers as suppliers,
 	orderItems,
 	orders,
+	prices,
 	productImages
 } from '$lib/server/db/schema';
-import { eq, and, sql, isNotNull, desc } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ params, locals }) => {
@@ -48,18 +49,17 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 
 	const images = result.map((img) => img.url);
 
+	if (isNaN(id)) {
+		error(400, 'Invalid Product ID');
+	}
+
 	const product = await db
 		.select({
 			id: products.id,
 			name: products.name,
-			price: products.price,
 			description: products.description,
 			category: productCategories.name,
 			categoryId: productCategories.id,
-			quantity: products.quantity,
-			reorderLevel: products.reorderLevel,
-			supplier: suppliers.name,
-			supplierId: suppliers.id,
 			image: products.featuredImage,
 			saleCount: sql<number>`SUM(${orderItems.quantity})`,
 			createdBy: user.name,
@@ -67,7 +67,6 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		})
 		.from(products)
 		.leftJoin(productCategories, eq(productCategories.id, products.categoryId))
-		.leftJoin(suppliers, eq(suppliers.id, products.supplierId))
 		.leftJoin(orderItems, eq(products.id, orderItems.productId))
 		.leftJoin(orders, and(eq(orderItems.orderId, orders.id), eq(orders.status, 'delivered')))
 		.leftJoin(user, eq(products.createdBy, user.id))
@@ -75,15 +74,18 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		.groupBy(
 			products.id,
 			products.name,
-			products.price,
-			orderItems.quantity,
 			products.description,
 			productCategories.name,
-			products.quantity,
-			suppliers.name,
-			products.reorderLevel
+			productCategories.id, // Added
+			products.featuredImage, // Added
+			user.name, // Added
+			products.createdAt // Added
 		)
 		.then((rows) => rows[0]);
+
+	if (!product) {
+		throw error(404, 'Product not found');
+	}
 
 	const categories = await db
 		.select({
@@ -92,6 +94,14 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 			description: productCategories.description
 		})
 		.from(productCategories);
+
+	const priceList = await db
+		.select({
+			amount: sql<number>`CAST(${prices.amount} AS SIGNED)`,
+			price: sql<number>`CAST(${prices.price} AS DOUBLE)`
+		})
+		.from(prices)
+		.where(eq(prices.productId, Number(id)));
 
 	return {
 		product,
@@ -102,6 +112,7 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		supplierList,
 		damagedForm,
 		allCategories,
-		images
+		images,
+		priceList
 	};
 };

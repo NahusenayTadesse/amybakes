@@ -7,7 +7,7 @@
 		MapPinIcon,
 		MessageCircleIcon,
 		MapPin,
-		SparklesIcon
+		Cookie
 	} from '@lucide/svelte';
 	let email = $state('');
 
@@ -54,10 +54,10 @@
 		<div class="mb-8 grid grid-cols-1 gap-12 md:grid-cols-3">
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<SparklesIcon class="size-8 text-primary" />
-					<span class="text-xl font-bold tracking-tight">GLAM</span>
+					<Cookie class="size-8 text-primary" />
+					<span class="text-xl font-bold tracking-tight">Amy Bakes</span>
 				</div>
-				<h4 class="font-semibold text-primary">Beauty & Spa</h4>
+				<h4 class="font-semibold text-primary">Cookies and Muffins</h4>
 				<p class="max-w-xs text-sm text-foreground/70">
 					Dedicated to enhancing your natural beauty through expert care and premium wellness
 					treatments.
@@ -65,13 +65,13 @@
 
 				<div class="flex flex-col gap-3 pt-2 text-sm">
 					<a
-						href="https://maps.app.goo.gl/Gb3TJqADaZMvxJ7v6"
+						href="https://maps.app.goo.gl/RLC2iCgNoqqu4ssC8"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="flex items-start gap-2 text-foreground/70 transition-colors hover:text-primary"
 					>
 						<MapPinIcon class="mt-0.5 size-4 shrink-0" />
-						<span>22 Mazoria, Addis Ababa, Ethiopia</span>
+						<span>Shola, Addis Ababa, Ethiopia</span>
 					</a>
 					<a
 						href="tel:0996983244"
@@ -81,11 +81,11 @@
 						<span>+251 996983244</span>
 					</a>
 					<a
-						href="mailto:hello@glambeautyspa.com"
+						href="mailto:hello@amybakes.com"
 						class="flex items-center gap-2 text-foreground/70 transition-colors hover:text-primary"
 					>
 						<MailIcon class="size-4 shrink-0" />
-						<span>hello@glambeautyspa.com</span>
+						<span>hello@amybakes.com</span>
 					</a>
 				</div>
 			</div>
@@ -121,11 +121,11 @@
 				</h4>
 				<div class="overflow-hidden rounded-2xl border bg-muted">
 					<iframe
-						src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.6200139503017!2d38.785857210079854!3d9.00706778929564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b851326f26c6d%3A0x5a311bfbc53bab46!2sGlam%20Beauty%20and%20Spa!5e0!3m2!1sen!2set!4v1772619451901!5m2!1sen!2set"
+						src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4342.005005207254!2d38.79191906137545!3d9.02238228049564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b8565d4a30387%3A0x1cf0bebcc87aa5b2!2sShola%20Market!5e0!3m2!1sen!2set!4v1772700056618!5m2!1sen!2set"
 						style="border:0;"
 						class="h-40 w-full opacity-80 contrast-125 grayscale transition-all hover:opacity-100 hover:grayscale-0"
 						loading="lazy"
-						title="Spa Location Map"
+						title="Amy Bakes Location"
 					></iframe>
 				</div>
 				<p class="text-xs text-foreground/50 italic">Open Monday — Sunday: 9:00 AM - 8:00 PM</p>

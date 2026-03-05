@@ -39,7 +39,9 @@
 	const formattedData = $derived(
 		cart?.items.map((item) => ({
 			product: item.productId,
-			quantity: item.quantity
+			quantity: item.quantity,
+			amount: item.amount,
+			price: item.price
 		})) || []
 	);
 

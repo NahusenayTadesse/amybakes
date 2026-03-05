@@ -17,26 +17,20 @@ export const edit = z.object({
 		.string()
 		.max(500, { message: "Product description can't be more than 500 characters." })
 		.optional(),
-	quantity: z.coerce
-		.number()
-		.int({ message: 'Quantity can only be full numbers, no decimals.' })
-		.positive({ message: 'Quantity must be a positive number.' })
-		.default(0),
-	price: z
-		.number({ message: 'Price is required' })
-		.positive({ message: 'Price must be a positive number.' }),
 
-	supplier: z.coerce.number('Supplier is required'),
-	reorderLevel: z.coerce
-		.number()
-		.int({ message: 'Reorder Level can only be full numbers, no decimals.' })
-		.positive({ message: 'Reorder Level must be a positive number.' })
-		.default(0),
+	prices: z
+		.object({
+			price: z.number('Prices are required.'),
+			amount: z.number('Amount are required.')
+		})
+		.array()
+		.min(1, { message: 'Prices are required.' }),
 
 	image: z
 		.instanceof(File)
 		.refine((file) => file.size <= MAX_FILE_SIZE, `Max file size is 10MB.`)
 		.refine((file) => ACCEPTED_FILE_TYPES.includes(file.type), 'Invalid file type.')
+		.optional()
 });
 
 export const adjust = z.object({

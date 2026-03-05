@@ -10,43 +10,16 @@ import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod4(add));
-	const signupForm = await superValidate(zod4(addUser));
-	const loginForm = await superValidate(zod4(loginSchema));
-
-	const fetchedProducts = await db
-		.select({
-			value: products.id,
-			name: sql<string>`
-TRIM(
-  CONCAT(
-    ${products.name},
-    COALESCE(CONCAT(' ', ${products.price}, ' ETB'), '')
-  )
-)`,
-
-			price: products.price
-		})
-		.from(products);
-
-	const fetchedCustomers = await db
-		.select({
-			value: customers.id,
-			name: customers.name
-		})
-		.from(customers);
 
 	return {
-		form,
-		signupForm,
-		loginForm,
-		fetchedProducts,
-		fetchedCustomers
+		form
 	};
 };
 
 export const actions: Actions = {
-	add: async ({ request, locals }) => {
+	add: async ({ request }) => {
 		const form = await superValidate(request, zod4(add));
+		console.log(form);
 		if (!form.valid) {
 			return message(form, { type: 'error', text: 'Please check the form for Errors' });
 		}
@@ -55,10 +28,6 @@ export const actions: Actions = {
 
 		try {
 			await db.transaction(async (tx) => {
-				const fetchedProducts = await tx // ← tx, not db
-					.select({ value: products.id, price: products.price })
-					.from(products);
-
 				let customer: number;
 
 				const excCustomer = await tx
@@ -87,9 +56,9 @@ export const actions: Actions = {
 						selectedProducts.map((product) => ({
 							orderId: orderId.id,
 							productId: Number(product.product),
+							amount: Number(product.amount),
 							quantity: Number(product.quantity),
-							price: getPrice(fetchedProducts, Number(product.product)),
-							createdBy: locals?.user?.id
+							price: Number(product.price)
 						}))
 					);
 				}
@@ -97,10 +66,17 @@ export const actions: Actions = {
 
 			return message(form, { type: 'success', text: 'Order Successfully Added' });
 		} catch (err) {
-			return message(form, {
-				type: 'error',
-				text: 'Error Adding Orders: ' + err?.message
-			});
+			console.error(err);
+			return message(
+				form,
+				{
+					type: 'error',
+					text: 'Error Adding Orders: ' + err?.message
+				},
+				{
+					status: 500
+				}
+			);
 		}
 	}
 };

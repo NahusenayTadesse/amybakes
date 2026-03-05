@@ -5,13 +5,11 @@
 	// Set app hook
 
 	let { data } = $props();
-
-	// Sample product data
 </script>
 
 <div class="min-h-screen w-full bg-slate-50 pb-16 text-slate-900">
 	<section class="border-b bg-white shadow-sm">
-		<ProductDetail {...data?.product} images={data?.images} />
+		<ProductDetail {...data?.product} priceList={data?.priceList} images={data?.images} />
 	</section>
 	{#if data?.images?.length}
 		<div class="mx-auto mt-12 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -19,7 +17,7 @@
 				<div>
 					<h2 class="text-3xl font-bold tracking-tight text-slate-900">Product Gallery</h2>
 					<p class="mt-2 text-sm text-slate-500">
-						A detailed look at the {data?.product?.name || 'product'} features.
+						A detailed look at the {data?.product?.productName || 'product'} features.
 					</p>
 				</div>
 				<span class="text-xs font-medium tracking-widest text-slate-400 uppercase">

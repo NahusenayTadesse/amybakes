@@ -12,11 +12,9 @@
 	import InputComp from '$lib/formComponents/InputComp.svelte';
 
 	import LoadingBtn from '$lib/formComponents/LoadingBtn.svelte';
-	import { ArrowLeft, Pencil, Save, History } from '@lucide/svelte';
-	import SelectComp from '$lib/formComponents/SelectComp.svelte';
+	import { ArrowLeft, Pencil, Save, History, X, Plus } from '@lucide/svelte';
 	import type { Snapshot } from '@sveltejs/kit';
 	import { getCurrentMonthRange } from '$lib/global.svelte';
-	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import Delete from '$lib/forms/Delete.svelte';
 	import SingleView from '$lib/components/SingleView.svelte';
 	import Errors from '$lib/formComponents/Errors.svelte';
@@ -26,11 +24,6 @@
 	let singleTable = $derived([
 		{ name: 'Name', value: data.product?.name },
 		{ name: 'Category', value: data.product.category },
-		{ name: 'Price', value: data.product?.price },
-		{ name: 'Available Quantity', value: data.product?.quantity },
-		{ name: 'Product Description', value: data.product?.description },
-		{ name: 'Reorder Notification Quantity', value: data.product?.reorderLevel },
-		{ name: 'Product Supplier', value: data?.product?.supplier },
 		{ name: 'Added On', value: data.product?.createdAt },
 		{ name: 'Added By', value: data.product?.createdBy },
 		{
@@ -46,7 +39,8 @@
 		data.form,
 		{
 			validators: zod4Client(edit),
-			resetForm: false
+			resetForm: false,
+			dataType: 'json'
 		}
 	);
 
@@ -55,10 +49,7 @@
 		($form.commission = data.product.commission),
 		($form.description = data.product.description),
 		($form.productId = data.product.id),
-		($form.quantity = data.product.quantity),
-		($form.price = data.product.price),
-		($form.reorderLevel = data.product.reorderLevel),
-		($form.supplier = data?.product?.supplierId));
+		($form.prices = data?.priceList));
 
 	export const snapshot: Snapshot = { capture, restore };
 
@@ -79,7 +70,51 @@
 		}
 	});
 
+	import DataTable from '$lib/components/Table/data-table.svelte';
+	import DataTableSort from '$lib/components/Table/data-table-sort.svelte';
+	import { renderComponent } from '$lib/components/ui/data-table/index.js';
+
+	const columns = [
+		{
+			accessorKey: 'index',
+			header: '#',
+			cell: (info) => info.row.index + 1,
+			sortable: false
+		},
+
+		{
+			accessorKey: 'amount',
+			header: ({ column }) =>
+				renderComponent(DataTableSort, {
+					name: 'Amount',
+					onclick: column.getToggleSortingHandler()
+				}),
+			sortable: true,
+			cell: ({ row }) => {
+				return row.original.amount ?? 0 + 'Pieces';
+			}
+		},
+
+		{
+			accessorKey: 'Price',
+			header: ({ column }) =>
+				renderComponent(DataTableSort, {
+					name: 'Price',
+					onclick: column.getToggleSortingHandler()
+				}),
+			sortable: true,
+			cell: ({ row }) => {
+				return row.original.price ?? 0 + 'ETB';
+			}
+		}
+	];
+
 	let images = $derived(data?.images);
+	let arrParts = `flex flex-col justify-start gap-2 w-full`;
+
+	function addIng() {
+		$form.prices = [...$form.prices, { price: 0, amount: 0 }];
+	}
 </script>
 
 <svelte:head>
@@ -122,6 +157,7 @@
 				class="flex w-full flex-col items-start justify-start gap-4 lg:w-1/2"
 				id="edit"
 				method="post"
+				enctype="multipart/form-data"
 			>
 				<Errors allErrors={$allErrors} />
 
@@ -165,45 +201,62 @@
 					required
 				/>
 
-				<InputComp
-					{form}
-					{errors}
-					type="number"
-					name="quantity"
-					label="Quantity"
-					placeholder="Enter the number of items the product currently has"
-					required
-				/>
+				<div class="mb-4 flex justify-end">
+					<Button type="button" size="sm" class="gap-2" onclick={() => addIng()}>
+						<Plus class="h-4 w-4" />
+						<span>Add Prices</span>
+					</Button>
+				</div>
+				{#each $form.prices as ing, i (ing)}
+					<div
+						class="flex w-full flex-col items-end gap-3
+ rounded-lg border
+ border-white/20 bg-white/10 p-3 shadow-lg
+  backdrop-blur-lg lg:flex-row dark:border-black/20 dark:bg-gray-700"
+					>
+						<div class={arrParts}>
+							<Label for="price">Price</Label>
 
-				<InputComp
-					{form}
-					{errors}
-					type="number"
-					name="price"
-					label="Price"
-					placeholder="Enter the price of item"
-					required
-				/>
-				<InputComp
-					{form}
-					{errors}
-					type="select"
-					name="supplier"
-					label="Product Category"
-					placeholder="Enter Product Name"
-					required
-					items={data?.supplierList}
-				/>
+							<Input
+								type="number"
+								name="price"
+								placeholder="Enter Price"
+								bind:value={$form.prices[i].price}
+							/>
 
-				<InputComp
-					{form}
-					{errors}
-					type="number"
-					name="reorderLevel"
-					label="Reorder Notify Level"
-					placeholder="Enter when you want to be notified"
-					required
-				/>
+							{#if $errors.prices?.[i]?.price}
+								<p class="text-sm text-red-500">{$errors.prices[i].price}</p>
+							{/if}
+						</div>
+
+						<div class={arrParts}>
+							<Label for="amount">Amount</Label>
+
+							<Input
+								type="number"
+								name="amount"
+								min="1"
+								placeholder="Amount of Ingredient"
+								bind:value={$form.prices[i].amount}
+							/>
+
+							{#if $errors.prices?.[i]?.amount}
+								<p class="text-sm text-red-500">{$errors.prices[i].amount}</p>
+							{/if}
+						</div>
+						<Button
+							type="button"
+							variant="outline"
+							title="Remove this product from list"
+							onclick={() => {
+								$form.prices.splice(i, 1);
+								$form.prices = $form.prices;
+							}}
+						>
+							<X class="h-8 w-8" />
+						</Button>
+					</div>
+				{/each}
 
 				<Button form="edit" type="submit" class="mt-4">
 					{#if $delayed}
@@ -217,6 +270,22 @@
 		</div>
 	{/if}
 </SingleView>
+<div class="mx-auto my-12 px-4 sm:px-6 lg:px-4">
+	{#if data?.priceList}
+		{#key data?.priceList}
+			<div class="mb-6 border-b border-gray-100 pb-4">
+				<h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Price List</h1>
+				<DataTable
+					{columns}
+					data={data?.priceList}
+					class="w-6xl!"
+					fileName="{data?.product?.name} - Price List"
+					search={true}
+				/>
+			</div>
+		{/key}
+	{/if}
+</div>
 
 <div class="mx-auto my-12 px-4 sm:px-6 lg:px-4">
 	{#if data?.product?.name}

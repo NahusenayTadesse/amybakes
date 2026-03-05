@@ -17,13 +17,18 @@
 	// Category filter state
 	let selectedCategories = $state<string[]>([]);
 	let minPrice = $state(0);
-	let maxPrice = $state(
-		Math.max(
-			...(data?.productList.map((p) =>
-				typeof p.price === 'number' ? p.price : parseFloat(p.price as string)
-			) ?? [0])
-		)
-	);
+	let maxPrice = $derived(Math.max(...data.productList.map((p) => Number(p.price))));
+
+	// Add this effect to "catch" the data when it loads
+	$effect(() => {
+		if (data?.productList.length > 0) {
+			const actualMax = Math.max(...data.productList.map((p) => Number(p.price)));
+			// Only auto-initialize once
+			if (maxPrice === 10000) {
+				maxPrice = actualMax;
+			}
+		}
+	});
 
 	// Get unique categories from products
 	const categories = $derived(
@@ -37,8 +42,7 @@
 				product.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				product.category?.toLowerCase().includes(searchQuery.toLowerCase());
 
-			const price =
-				typeof product.price === 'number' ? product.price : parseFloat(product.price as string);
+			const price = Number(product.price);
 			const matchesPrice = price >= minPrice && price <= maxPrice;
 
 			const matchesCategory =

@@ -81,7 +81,7 @@
 			<Command.List>
 				<Command.Empty>No {name.replace(/([a-z])([A-Z])/g, '$1 $2')} found.</Command.Empty>
 				<Command.Group>
-					{#each items as item}
+					{#each items as item (item)}
 						<Command.Item
 							value={item.name}
 							keywords={[item.name]}

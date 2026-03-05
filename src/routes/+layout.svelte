@@ -63,9 +63,9 @@
 </svelte:head>
 <ModeWatcher />
 
-<Toaster position="bottom-right" richColors closeButton />
+<Toaster position="bottom-right" color="#ffb8c9" richColors closeButton />
 
-<ProgressBar color="#3B82F6" zIndex={1000} />
+<ProgressBar color="#ffb8c9" zIndex={1000} />
 
 {#if updated.current}
 	<div class={toastmsg} transition:fly={{ x: 20, duration: 300 }}>
