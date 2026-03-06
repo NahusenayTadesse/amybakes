@@ -57,11 +57,7 @@
 				<div
 					class="aspect-square overflow-hidden rounded-2xl bg-linear-to-br from-primary/20 to-purple-100/20"
 				>
-					<img
-						src="/placeholder-bakery-interior.svg"
-						alt="Amy Bakes Kitchen"
-						class="h-full w-full object-cover"
-					/>
+					<img src="/files/mascot.webp" alt="Amy Bakes Kitchen" />
 				</div>
 				<div
 					class="shadow-lg-lg absolute -right-6 -bottom-6 max-w-xs rounded-xl bg-primary p-6 text-primary-foreground"

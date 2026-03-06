@@ -104,7 +104,7 @@
 				</div>
 				<!-- Thumbnail placeholder -->
 				<div class="flex gap-2">
-					{#each images as image, i (image)}
+					{#each images as image, i (i)}
 						<button
 							class="aspect-square w-20 overflow-hidden rounded-lg border-2 border-transparent bg-muted/50 transition-all duration-200 hover:border-primary"
 							aria-label="View image {i + 1}"

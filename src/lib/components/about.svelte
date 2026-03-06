@@ -75,19 +75,6 @@
 		<div class="mb-12 grid gap-6 lg:grid-cols-3">
 			<div transition:fly={{ y: 20, duration: 600, delay: 100 }} class="lg:col-span-2">
 				<Card class="h-full border-rose-100 shadow-sm">
-					<div
-						class="absolute -top-4 -right-4 opacity-10 md:static md:mb-8 md:flex md:justify-center md:opacity-100"
-					>
-						<div class="group relative">
-							<div class="absolute inset-0 animate-pulse rounded-full bg-primary/20 blur-2xl"></div>
-
-							<img
-								src="/files/mascot.webp"
-								alt="Chuche the Spokes-Puppy"
-								class="relative h-32 w-32 object-contain transition-transform duration-500 group-hover:scale-110 md:h-40 md:w-40"
-							/>
-						</div>
-					</div>
 					<CardHeader class="pb-3">
 						<CardTitle class="text-xl">The Why Behind the Whisk</CardTitle>
 						<CardDescription>From Training Room to Tasting Room</CardDescription>
@@ -106,10 +93,17 @@
 					</CardContent>
 				</Card>
 			</div>
-
-			<div transition:fly={{ y: 20, duration: 600, delay: 200 }} class="flex flex-col gap-3">
+			<img
+				src="/files/mascot.webp"
+				alt="Chuche the Spokes-Puppy"
+				class="w-auto transition-transform duration-500 hover:scale-110"
+			/>
+			<div
+				transition:fly={{ y: 20, duration: 600, delay: 200 }}
+				class="grid w-full grid-cols-1 gap-3 lg:col-span-3 lg:grid-cols-4"
+			>
 				{#each highlights as highlight (highlight.label)}
-					<Card class="border-rose-100 bg-white/50 transition-all hover:bg-white">
+					<Card class="border-rose-100 bg-background/50 transition-all hover:bg-background">
 						<CardContent class="flex items-center gap-3 p-4">
 							<div class="shrink-0">
 								<div class="flex size-9 items-center justify-center rounded-full bg-rose-100">

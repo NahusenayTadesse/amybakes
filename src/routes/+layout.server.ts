@@ -3,28 +3,11 @@ import { products, productCategories, user, roles, prices } from '$lib/server/db
 import { eq, min } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ locals }) => {
-	const currentUser = locals?.user;
-	let roleName = ''; // Initialize with a default value
-
-	// 1. Fetch the role name if a user exists
-	if (currentUser) {
-		const roleData = await db
-			.select({ name: roles.name })
-			.from(user)
-			.leftJoin(roles, eq(user.roleId, roles.id))
-			.where(eq(user.id, currentUser.id))
-			.then((rows) => rows[0]);
-
-		roleName = roleData?.name ?? '';
-	}
-
-	// 2. Fetch the product list (this now always runs)
+export const load: LayoutServerLoad = async () => {
 	const productList = await db
 		.select({
 			productId: products.id,
 			productName: products.name,
-			// We select the min price from the prices table
 			price: min(prices.price),
 			amount: min(prices.amount),
 			image: products.featuredImage,
@@ -41,8 +24,6 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 
 	// 3. Return everything at once
 	return {
-		productList,
-		roleName,
-		user: currentUser
+		productList
 	};
 };

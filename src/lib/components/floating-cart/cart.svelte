@@ -9,6 +9,8 @@
 
 	const cart = useCart();
 
+	let open = $state(false);
+
 	/** Format price to currency */
 	const formatPrice = (price: number) => {
 		return new Intl.NumberFormat('en-US', {
@@ -20,7 +22,7 @@
 
 <svelte:body style:overflow={cart.isOpen ? 'hidden' : 'auto'} />
 
-<Popover.Root>
+<Popover.Root bind:open>
 	<Popover.Trigger
 		class="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95"
 	>
@@ -66,7 +68,9 @@
 						<TrashIcon class="size-4" />
 						Clear
 					</Button>
-					<Button size="sm" class="flex-1" href="/checkout">Checkout</Button>
+					<Button size="sm" onclick={() => (open = false)} class="flex-1" href="/checkout"
+						>Checkout</Button
+					>
 				</div>
 			</div>
 		{:else}

@@ -46,7 +46,7 @@
 				{#each navLinks as link (link.href)}
 					<Button
 						href={link.href}
-						variant={page.url.pathname === link.href ? 'secondary' : 'primary'}
+						variant={page.url.pathname === link.href ? 'secondary' : 'default'}
 					>
 						{link.label}
 					</Button>
@@ -55,9 +55,6 @@
 			<div class="flex flex-row items-center justify-end">
 				<div class="m-2">
 					<!-- Search and Auth -->
-					<div class="hidden items-center gap-4 md:flex">
-						<Button href="/shop" variant="default"><ShoppingBag /> Shop</Button>
-					</div>
 				</div>
 				<DarkMode />
 			</div>

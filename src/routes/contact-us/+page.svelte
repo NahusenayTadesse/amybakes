@@ -25,25 +25,25 @@
 	const socialLinks = [
 		{
 			name: 'Instagram',
-			url: 'https://www.instagram.com/lalobakerysolution?igsh=MTZ1eDNldHl3OW9iNw%3D%3D&utm_source=qr',
+			url: 'https://www.instagram.com/amybakes',
 			icon: IconBrandInstagram,
 			color: 'hover:text-pink-500'
 		},
 		{
 			name: 'TikTok',
-			url: 'https://www.tiktok.com/@lalobakerysolution?_r=1&_t=ZM-91WtG5hY5VY',
+			url: 'https://www.tiktok.com/@amybakes?_r=1&_t=ZM-91WtG5hY5VY',
 			icon: IconBrandTiktok,
 			color: 'hover:text-black dark:hover:text-white'
 		},
 		{
 			name: 'Facebook',
-			url: 'https://facebook.com',
+			url: 'https://facebook.com/amybakes',
 			icon: IconBrandFacebook,
 			color: 'hover:text-blue-600'
 		},
 		{
 			name: 'Telegram',
-			url: 'https://t.me/LaloBakery',
+			url: 'https://t.me/AmyBakes',
 			icon: MessageCircleIcon,
 			color: 'hover:text-blue-400'
 		}
@@ -54,8 +54,8 @@
 		{
 			icon: MailIcon,
 			label: 'Email',
-			value: 'info@glambeautyandspa.com',
-			href: 'mailto:info@glambeautyandspa.com'
+			value: 'info@amybakes.com',
+			href: 'mailto:info@amybakes.com'
 		},
 		{
 			icon: PhoneIcon,
@@ -229,7 +229,7 @@
 
 <section class="relative my-16 h-[50vh] w-full max-w-7xl justify-self-center lg:h-[90vh] lg:w-9/10">
 	<iframe
-		src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.6200139503017!2d38.785857210079854!3d9.00706778929564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b851326f26c6d%3A0x5a311bfbc53bab46!2sGlam%20Beauty%20and%20Spa!5e0!3m2!1sen!2set!4v1772619451901!5m2!1sen!2set"
+		src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4342.005005207254!2d38.79191906137545!3d9.02238228049564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b8565d4a30387%3A0x1cf0bebcc87aa5b2!2sShola%20Market!5e0!3m2!1sen!2set!4v1772700056618!5m2!1sen!2set"
 		style="border:0;"
 		class="h-full w-full rounded-3xl"
 		loading="lazy"

@@ -1,6 +1,7 @@
 import { superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { edit, adjust, damaged, editGallery } from './schema';
+import { error } from '@sveltejs/kit';
 
 import { db } from '$lib/server/db';
 import {
@@ -16,7 +17,7 @@ import {
 import { eq, and, sql } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ params, locals }) => {
+export const load: LayoutServerLoad = async ({ params }) => {
 	const { id } = params;
 	const form = await superValidate(zod4(edit));
 	const adjustForm = await superValidate(zod4(adjust));
@@ -76,15 +77,16 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 			products.name,
 			products.description,
 			productCategories.name,
-			productCategories.id, // Added
-			products.featuredImage, // Added
-			user.name, // Added
-			products.createdAt // Added
+			productCategories.id,
+			products.featuredImage,
+			user.id, // Better to group by ID than Name
+			user.name, // Keep this if you're selecting it
+			products.createdAt
 		)
 		.then((rows) => rows[0]);
 
 	if (!product) {
-		throw error(404, 'Product not found');
+		error(404, 'Product not found');
 	}
 
 	const categories = await db

@@ -24,25 +24,25 @@
 		{
 			name: 'Instagram',
 			// Updated placeholder handles to reflect the brand
-			url: 'https://www.instagram.com/glambeautyspa',
+			url: 'https://www.instagram.com/amybakes',
 			icon: IconBrandInstagram,
 			color: 'hover:text-pink-500'
 		},
 		{
 			name: 'TikTok',
-			url: 'https://www.tiktok.com/@glambeautyspa',
+			url: 'https://www.tiktok.com/@amybakes',
 			icon: IconBrandTiktok,
 			color: 'hover:text-black dark:hover:text-white'
 		},
 		{
 			name: 'Facebook',
-			url: 'https://facebook.com/glambeautyspa',
+			url: 'https://facebook.com/AmyBakes',
 			icon: IconBrandFacebook,
 			color: 'hover:text-blue-600'
 		},
 		{
 			name: 'Telegram',
-			url: 'https://t.me/GlamBeautySpa',
+			url: 'https://t.me/AmyBakes',
 			icon: MessageCircleIcon,
 			color: 'hover:text-blue-400'
 		}
@@ -59,8 +59,7 @@
 				</div>
 				<h4 class="font-semibold text-primary">Cookies and Muffins</h4>
 				<p class="max-w-xs text-sm text-foreground/70">
-					Dedicated to enhancing your natural beauty through expert care and premium wellness
-					treatments.
+					Freshly baked cookies and muffins made with love, perfect for every sweet moment.
 				</p>
 
 				<div class="flex flex-col gap-3 pt-2 text-sm">
@@ -119,6 +118,12 @@
 				<h4 class="flex items-center gap-2 font-semibold">
 					<MapPin class="size-4" /> Find Us
 				</h4>
+
+				<img
+					src="/files/motor.webp"
+					alt="Chuche the Spokes-Puppy"
+					class="h-48 w-auto transition-transform duration-500 hover:scale-110"
+				/>
 				<div class="overflow-hidden rounded-2xl border bg-muted">
 					<iframe
 						src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4342.005005207254!2d38.79191906137545!3d9.02238228049564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b8565d4a30387%3A0x1cf0bebcc87aa5b2!2sShola%20Market!5e0!3m2!1sen!2set!4v1772700056618!5m2!1sen!2set"

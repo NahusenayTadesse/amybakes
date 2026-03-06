@@ -95,7 +95,7 @@
 			<div class="mb-6 flex items-center justify-between">
 				<div>
 					<h1 class="text-3xl font-bold">Shop</h1>
-					<p class="mt-1 text-muted-foreground">Browse our collection of products</p>
+					<p class="mt-1 text-muted-foreground">Browse our collection of Baked Goods</p>
 				</div>
 			</div>
 

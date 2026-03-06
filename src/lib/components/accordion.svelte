@@ -96,11 +96,5 @@
 				</AccordionItem>
 			{/each}
 		</Accordion>
-
-		<!-- Footer CTA -->
-		<div class="mt-12 text-center">
-			<p class="mb-4 text-muted-foreground">Ready to elevate your bakery business?</p>
-			<Button href="/contact-us">Get Started Today</Button>
-		</div>
 	</div>
 </div>
