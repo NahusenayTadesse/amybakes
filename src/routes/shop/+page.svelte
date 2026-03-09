@@ -88,6 +88,35 @@
 	);
 </script>
 
+<svelte:head>
+	<title>Shop - Amy Bakes</title>
+
+	<meta
+		name="description"
+		content="Shop the Amy Bakes collection. From our signature 'Less Guilt' muffins to authentic American-style chewy cookies, experience quality baked with business precision."
+	/>
+	<meta
+		name="keywords"
+		content="buy cookies online, healthy muffins, Amy Bakes shop, American style cookies, freshly baked goods, Melela Partners treats"
+	/>
+
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Shop Amy Bakes: The Business of Baking" />
+	<meta
+		property="og:description"
+		content="Treat yourself to our 'Less Guilt' muffins and authentic American-style chewy cookies. Hand-crafted with heart and precision."
+	/>
+	<meta property="og:image" content="/files/cookie.webp" />
+
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:title" content="Shop Amy Bakes | Freshly Baked Cookies & Muffins" />
+	<meta
+		property="twitter:description"
+		content="Experience the perfect balance of heart and precision. Shop our signature baked goods online."
+	/>
+	<meta property="twitter:image" content="/files/cookie.webp" />
+</svelte:head>
+
 <div class="min-h-dvh bg-background pb-8 text-foreground transition-colors duration-300">
 	<!-- Header -->
 	<header class="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">

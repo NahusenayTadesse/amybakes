@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { useCart } from '$lib/hooks/cart.svelte.js';
+	import { useCart, type ProductPrice } from '$lib/hooks/cart.svelte.js';
 	import { Card, CardContent, CardFooter } from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 	import { PlusIcon, CheckIcon, ShoppingCartIcon } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
+	import PriceDropdown from './floating-cart/price-dropdown.svelte';
 
 	type Props = {
 		productId: number;
@@ -13,9 +14,19 @@
 		amount?: number | string;
 		image?: string;
 		category?: string;
+		productList: ProductPrice;
 	};
 
-	let { productId, productName, price, amount, image, category }: Props = $props();
+	let { productId, productName, price, amount, image, category, productList }: Props = $props();
+	const item = $derived({
+		productId,
+		productName,
+		price,
+		amount,
+		image,
+		category,
+		productList
+	});
 	const cart = useCart();
 
 	let justAdded = $state(false);
@@ -45,6 +56,11 @@
 			justAdded = false;
 		}, 1500);
 	}
+
+	const handlePriceChange = (newAmount: number | string, newPrice: number) => {
+		amount = newAmount;
+		price = newPrice;
+	};
 </script>
 
 <Card
@@ -57,7 +73,7 @@
 					src="/files/{image}"
 					alt={productName}
 					loading="lazy"
-					class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+					class="h-fu ll w-full object-cover transition-transform duration-500 group-hover:scale-110"
 				/>
 			</a>
 		{:else}
@@ -93,7 +109,7 @@
 			</h3>
 		</div>
 		<p class="text-xl font-black text-primary">
-			{formattedPrice}
+			<PriceDropdown {item} onPriceChange={handlePriceChange} />
 		</p>
 	</CardContent>
 

@@ -5,7 +5,43 @@
 	// Set app hook
 
 	let { data } = $props();
+
+	const jsonLd = {
+		'@context': 'https://schema.org/',
+		'@type': 'Product',
+		name: data?.product.productName,
+		image: [data?.product.image, ...(data?.images ?? [])],
+		description: data?.product.description,
+		brand: {
+			'@type': 'Brand',
+			name: 'Amy Bakes'
+		},
+		offers: {
+			'@type': 'AggregateOffer',
+			lowPrice: data?.product.price,
+			priceCurrency: 'ETB',
+			offerCount: data?.priceList?.length
+		}
+	};
 </script>
+
+<svelte:head>
+	<title>{data?.product.productName} | Amy Bakes</title>
+	<meta name="description" content={data?.product.description?.substring(0, 160)} />
+
+	<meta property="og:type" content="product" />
+	<meta property="og:title" content="{data?.product.productName} - Amy Bakes" />
+	<meta property="og:description" content={data?.product.description} />
+	<meta property="og:image" content="/files/{data?.product.image}" />
+	<meta property="product:price:amount" content={data?.product.price} />
+	<meta property="product:price:currency" content="ETB" />
+
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:title" content={data?.product.productName} />
+	<meta property="twitter:image" content="/files/{data?.product.image}" />
+
+	<!-- {@html `<script type="application/ld+json">${JSON.stringify(jsonLd)}<\/script>`} -->
+</svelte:head>
 
 <div class="min-h-screen w-full bg-slate-50 pb-16 text-slate-900">
 	<section class="border-b bg-white shadow-sm">

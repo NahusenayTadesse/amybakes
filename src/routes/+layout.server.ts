@@ -4,7 +4,7 @@ import { eq, min } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async () => {
-	const productList = await db
+	const productsData = await db
 		.select({
 			productId: products.id,
 			productName: products.name,
@@ -21,6 +21,23 @@ export const load: LayoutServerLoad = async () => {
 		// We must group by the product ID to ensure the min() function
 		// calculates the lowest price per individual product
 		.groupBy(products.id, productCategories.name);
+
+	const productIds = productsData.map((p) => p.id);
+	const pricesData = await db.select().from(prices);
+
+	// Then filter in memory
+
+	const relevantPrices = pricesData.filter((p) => productIds.includes(p.productId));
+
+	const productList = productsData.map((p) => ({
+		...p,
+		priceList: relevantPrices
+			.filter((price) => price.productId === p.id)
+			.map((price) => ({
+				amount: price.amount,
+				price: price.price
+			}))
+	}));
 
 	// 3. Return everything at once
 	return {

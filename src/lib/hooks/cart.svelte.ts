@@ -5,8 +5,14 @@ export type CartItem = {
 	productName: string;
 	amount: number | string; // e.g., "6-pack", "12-pack", or 500
 	price: number;
+	priceList: ProductPrice[];
 	quantity: number;
 };
+
+export interface ProductPrice {
+	amount: string | number; // e.g., "10 Pieces"
+	price: string | number; // e.g., "ETB 500"
+}
 
 const CART_STORAGE_KEY = 'amybakes_cookies_store';
 

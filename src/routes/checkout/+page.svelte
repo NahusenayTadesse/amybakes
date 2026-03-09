@@ -59,6 +59,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Checkout | Amy Bakes</title>
+</svelte:head>
+
 <div class="mx-auto max-w-6xl px-4 py-8 md:py-12">
 	<div class="mb-8 flex items-center gap-3">
 		<div class="rounded-full bg-primary/10 p-2 text-primary">

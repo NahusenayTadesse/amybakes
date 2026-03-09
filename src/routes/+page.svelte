@@ -24,6 +24,35 @@
 	);
 </script>
 
+<svelte:head>
+	<title>Amy Bakes | Authentic Baking</title>
+	<meta
+		name="description"
+		content="From training rooms to tasting rooms, Amy Bakes is a hands-on business laboratory. Discover our 'Less Guilt' muffins and authentic American-style cookies."
+	/>
+	<meta
+		name="keywords"
+		content="Amy Bakes, Melela Partners, business consulting, artisanal bakery, less guilt muffins, American style cookies, business laboratory"
+	/>
+
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Amy Bakes: The Why Behind the Whisk" />
+	<meta
+		property="og:description"
+		content="Discover how baking for Melela Partners evolved into a real-world business classroom for sourcing, pricing, and quality."
+	/>
+	<meta property="og:image" content="/files/mascot.webp" />
+
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:url" content="/files/mascot.webp" />
+	<meta property="twitter:title" content="Amy Bakes | Business Consulting Meets Baking" />
+	<meta
+		property="twitter:description"
+		content="A hands-on business laboratory where we practice exactly what we consult. Featuring our signature American-style chewy cookies."
+	/>
+	<meta property="twitter:image" content="/files/mascot.webp" />
+</svelte:head>
+
 <Hero />
 <About />
 
