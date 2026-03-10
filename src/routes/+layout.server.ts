@@ -22,17 +22,14 @@ export const load: LayoutServerLoad = async () => {
 		// calculates the lowest price per individual product
 		.groupBy(products.id, productCategories.name);
 
-	const productIds = productsData.map((p) => p.id);
-	const pricesData = await db.select().from(prices);
+	const allPrices = await db.select().from(prices);
 
 	// Then filter in memory
 
-	const relevantPrices = pricesData.filter((p) => productIds.includes(p.productId));
-
 	const productList = productsData.map((p) => ({
 		...p,
-		priceList: relevantPrices
-			.filter((price) => price.productId === p.id)
+		priceList: allPrices
+			.filter((price) => price.productId === p.productId) // use productId here too
 			.map((price) => ({
 				amount: price.amount,
 				price: price.price

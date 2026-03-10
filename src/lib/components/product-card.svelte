@@ -1,23 +1,32 @@
 <script lang="ts">
 	import { useCart, type ProductPrice } from '$lib/hooks/cart.svelte.js';
-	import { Card, CardContent, CardFooter } from '$lib/components/ui/card';
+	import {
+		Card,
+		CardHeader,
+		CardTitle,
+		CardDescription,
+		CardContent,
+		CardFooter
+	} from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
-	import { PlusIcon, CheckIcon, ShoppingCartIcon } from '@lucide/svelte';
+	import { PlusIcon, PackageIcon, CheckIcon, ShoppingCartIcon } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
-	import PriceDropdown from './floating-cart/price-dropdown.svelte';
+	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select';
 
 	type Props = {
 		productId: number;
 		productName: string;
 		price: number | string;
-		amount?: number | string;
+		amount: number | string;
 		image?: string;
 		category?: string;
-		productList: ProductPrice;
+		priceList: ProductPrice[];
 	};
 
-	let { productId, productName, price, amount, image, category, productList }: Props = $props();
+	let { productId, productName, price, amount, image, category, priceList }: Props = $props();
+
+	let quantity = $state(1);
 	const item = $derived({
 		productId,
 		productName,
@@ -25,7 +34,8 @@
 		amount,
 		image,
 		category,
-		productList
+		quantity,
+		priceList
 	});
 	const cart = useCart();
 
@@ -39,11 +49,11 @@
 
 	// Derived values for clarity
 	const numericPrice = $derived(typeof price === 'string' ? parseFloat(price) : price);
-	const formattedPrice = $derived(formatter.format(numericPrice));
+	// const formattedPrice = $derived(formatter.format(numericPrice));
 	const quantityInCart = $derived(cart.items.find((i) => i.productId === productId)?.quantity ?? 0);
 
 	function addToCart() {
-		if (justAdded) return; // Prevent double-clicks during animation
+		if (justAdded) return;
 
 		cart.addItem({ productId, amount, productName, price: numericPrice });
 		justAdded = true;
@@ -101,16 +111,71 @@
 
 	<CardContent class="grid gap-1 p-4">
 		<div class="flex flex-col">
-			<span class="text-xs font-medium tracking-wider text-muted-foreground uppercase"
-				>ID: {productId}</span
+			<span class="mb-2 text-xs font-medium tracking-wider text-muted-foreground uppercase"
+				>Amount: {amount} Pieces</span
 			>
 			<h3 class="line-clamp-1 text-lg leading-tight font-bold" title={productName}>
 				{productName}
 			</h3>
 		</div>
-		<p class="text-xl font-black text-primary">
-			<PriceDropdown {item} onPriceChange={handlePriceChange} />
-		</p>
+
+		<div class="space-y-3">
+			<label class="flex items-center gap-2 text-sm font-semibold text-foreground/80">
+				<PackageIcon class="size-4" />
+				Package Options
+			</label>
+			<Select type="single" value={`${amount}-${price}`}>
+				<SelectTrigger
+					class="h-auto w-full border-2 py-4 transition-colors duration-200 hover:border-primary/50"
+				>
+					<div class="flex items-center justify-between gap-3 border-y border-foreground/10 py-3">
+						<div class="flex items-center gap-3">
+							<div
+								class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10"
+							>
+								<ShoppingCartIcon class="size-5 text-primary" />
+							</div>
+							<div class="text-left leading-tight">
+								<div class="font-semibold text-foreground">{amount} Pieces</div>
+								<div class="text-[12px] text-foreground/60">ETB {price}</div>
+							</div>
+						</div>
+
+						<div class="text-right leading-tight">
+							<div class="text-sm font-bold text-primary tabular-nums">ETB {price}</div>
+							<div class="text-[10px] tracking-wider text-foreground/50 uppercase">per pack</div>
+						</div>
+					</div>
+				</SelectTrigger>
+				<SelectContent class="">
+					{#each priceList as newprice (newprice.amount)}
+						<SelectItem
+							value={`${newprice.amount}-${newprice.price}`}
+							onclick={() => handlePriceChange(newprice.amount, Number(newprice.price))}
+							class="cursor-pointer px-4 py-3"
+						>
+							<div class="flex w-full items-center justify-between gap-6">
+								<div class="flex items-center gap-3">
+									<div class="flex size-8 items-center justify-center rounded-lg bg-primary/10">
+										<PackageIcon class="size-4 text-primary" />
+									</div>
+									<div class="text-left">
+										<div class="font-semibold">{newprice.amount} Pieces</div>
+										<div class="text-xs text-foreground/60">Standard pack</div>
+									</div>
+								</div>
+								<div class="text-right">
+									<div class="font-bold text-primary">ETB {newprice.price}</div>
+									<div class="text-xs text-foreground/50">
+										{(Number(newprice.price) / Number(newprice.amount)).toFixed(2)}/piece
+									</div>
+								</div>
+							</div>
+						</SelectItem>
+					{/each}
+				</SelectContent>
+			</Select>
+		</div>
 	</CardContent>
 
 	<CardFooter class="p-4 pt-0">

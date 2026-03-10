@@ -5,7 +5,6 @@ export type CartItem = {
 	productName: string;
 	amount: number | string; // e.g., "6-pack", "12-pack", or 500
 	price: number;
-	priceList: ProductPrice[];
 	quantity: number;
 };
 

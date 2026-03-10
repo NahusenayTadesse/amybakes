@@ -4,13 +4,14 @@
 
 	interface Props {
 		item: CartItem;
+		priceList: ProductPrice[];
 		onPriceChange?: (amount: number | string, price: number) => void;
 	}
 
-	const { item, onPriceChange }: Props = $props();
-	const priceList = $derived(item?.priceList ?? []);
+	const { item, priceList, onPriceChange }: Props = $props();
+	// const priceList = $derived(item?.priceList ?? []);
 	let selectedPrice = $derived(
-		priceList.find((p) => p.amount === item?.amount && p.price === item?.price)
+		priceList?.find((p) => p.amount === item?.amount && p.price === item?.price)
 	);
 
 	const handlePriceChange = (newPrice: ProductPrice) => {
@@ -27,9 +28,7 @@
 	onchange={(value) => {
 		if (value) {
 			const [amount, price] = value.split('-');
-			const newPrice = item.priceList.find(
-				(p) => p.amount === amount && p.price === parseFloat(price)
-			);
+			const newPrice = priceList.find((p) => p.amount === amount && p.price === parseFloat(price));
 			if (newPrice) handlePriceChange(newPrice);
 		}
 	}}
@@ -38,7 +37,7 @@
 		{selectedPrice?.amount} - ${selectedPrice?.price}
 	</SelectTrigger>
 	<SelectContent>
-		{#each item.priceList as price (price.amount)}
+		{#each priceList as price (price.amount)}
 			<SelectItem value={`${price.amount}-${price.price}`}>
 				{price.amount} - ETB{price.price}
 			</SelectItem>
