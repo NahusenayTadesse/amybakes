@@ -1,7 +1,7 @@
 import { eq, and, sql } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
-import { orders, orderItems, products, customers } from '$lib/server/db/schema';
+import { orders, orderItems, products, customers, transactions } from '$lib/server/db/schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -9,11 +9,15 @@ export const load: PageServerLoad = async () => {
 		.select({
 			id: orders.id,
 			name: customers.name,
+			phone: customers.phone,
 			customerId: customers.id,
+			paymentMethod: transactions.paymentMethodId,
+			recieptLink: transactions.recieptLink,
 			status: orders.status
 		})
 		.from(orders)
-		.leftJoin(customers, eq(orders.customerId, customers.id));
+		.leftJoin(customers, eq(orders.customerId, customers.id))
+		.leftJoin(transactions, eq(orders.transactionId, transactions.id));
 
 	const allItems = await db
 		.select({

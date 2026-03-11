@@ -40,10 +40,13 @@
 		customerName,
 		customerList,
 		productList,
+		paymentMethod,
 		priceList,
+		image = '',
 		orderItems,
 		icon = false,
-		status = true
+		status = true,
+		paymentMethodList
 	}: {
 		data: SuperValidated<Infer<Edit>>;
 		id: number;
@@ -54,7 +57,10 @@
 		priceList: Item[];
 		orderItems: OrderItem[];
 		icon: boolean;
+		paymentMethod?: number;
 		status: boolean;
+		paymentMethodList: Item[];
+		image?: '';
 	} = $props();
 
 	const { form, errors, enhance, delayed, message, allErrors } = superForm(data, {
@@ -84,6 +90,10 @@
 	$form.id = id;
 	$form.customer = customer;
 
+	if (paymentMethod) {
+		$form.paymentMethod = paymentMethod;
+	}
+
 	$form.selectedProducts = simplifyOrderItems(
 		orderItems.filter((item) => Number(item.orderId) === Number(id))
 	);
@@ -101,8 +111,6 @@
 			}
 		}
 	});
-
-	let arrParts = `flex flex-col justify-start gap-2`;
 </script>
 
 <!-- <Tooltip.Provider>
@@ -133,6 +141,7 @@
 				method="post"
 				id="edit"
 				class="mt-4 flex flex-col gap-4"
+				enctype="multipart/form-data"
 			>
 				<Errors allErrors={$allErrors} />
 				<input type="hidden" name="id" value={$form.id} />
@@ -244,6 +253,27 @@
 					]}
 				/>
 
+				{#if $form.status === 'delivered'}
+					<InputComp
+						label="Payment Method"
+						name="paymentMethod"
+						type="combo"
+						{form}
+						{errors}
+						items={paymentMethodList}
+					/>
+
+					<InputComp
+						label="Reciept"
+						name="reciept"
+						type="file"
+						{form}
+						{image}
+						{errors}
+						placeholder="Upload Screenshot or PDF of Reciept"
+					/>
+				{/if}
+
 				<Button type="submit" class="mt-4" form="edit">
 					{#if $delayed}
 						<LoadingBtn name="Saving Changes" />
@@ -257,9 +287,3 @@
 		</ScrollArea>
 	</Dialog.Content>
 </Dialog.Root>
-<!-- </Tooltip.Trigger>
-    		<Tooltip.Content>
-    			<p>Edit {customerName}</p>
-    		</Tooltip.Content>
-    	</Tooltip.Root>
-    </Tooltip.Provider> -->

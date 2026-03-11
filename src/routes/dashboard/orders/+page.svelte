@@ -29,6 +29,7 @@
 					orderItems: data?.allItems,
 					priceList: data?.fetchedPrices,
 					productList: data?.fetchedProducts,
+					paymentMethodList: data?.paymentMethodList,
 					data: data?.editForm,
 					icon: false,
 					status: row.original.status
@@ -84,6 +85,7 @@
 					customerName: row.original.name,
 					orderItems: data?.allItems,
 					priceList: data?.fetchedPrices,
+					paymentMethodList: data?.paymentMethodList,
 					productList: data?.fetchedProducts,
 					data: data?.editForm,
 					icon: true,

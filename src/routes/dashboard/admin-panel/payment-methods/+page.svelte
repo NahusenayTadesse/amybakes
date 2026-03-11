@@ -1,13 +1,11 @@
 <script>
 	import { renderComponent } from '$lib/components/ui/data-table/index.js';
 	import DataTable from '$lib/components/Table/data-table.svelte';
-	import DataTableLinks from '$lib/components/Table/data-table-links.svelte';
 	import DataTableSort from '$lib/components/Table/data-table-sort.svelte';
 	import DialogComp from '$lib/formComponents/DialogComp.svelte';
-	import Empty from '$lib/components/Empty.svelte';
 	import { Button } from '$lib/components/ui/button/index';
 	import Edit from './edit.svelte';
-	export const columns = [
+	const columns = [
 		{
 			id: 'index',
 			header: '#',
@@ -33,24 +31,6 @@
 					action: '?/edit',
 					data: data.editForm,
 					icon: false
-				});
-			}
-		},
-
-		{
-			accessorKey: 'createdBy',
-			header: ({ column }) =>
-				renderComponent(DataTableSort, {
-					name: 'Created By',
-					onclick: column.getToggleSortingHandler()
-				}),
-			sortable: true,
-			cell: ({ row }) => {
-				// You can pass whatever you need from `row.original` to the component
-				return renderComponent(DataTableLinks, {
-					id: row.original.createdById,
-					name: row.original.createdBy,
-					link: '/dashboard/users'
 				});
 			}
 		},

@@ -4,6 +4,7 @@
 	import DataTableSort from '$lib/components/Table/data-table-sort.svelte';
 	import Statuses from '$lib/components/Table/statuses.svelte';
 	import Edit from '../edit.svelte';
+	import DataTableLinks from '$lib/components/Table/data-table-links.svelte';
 
 	const columns = [
 		{
@@ -28,10 +29,13 @@
 					customerName: row.original.name,
 					orderItems: data?.allItems,
 					priceList: data?.fetchedPrices,
+					paymentMethodList: data?.paymentMethodList,
 					productList: data?.fetchedProducts,
 					data: data?.editForm,
 					icon: false,
-					status: row.original.status
+					status: row.original.status,
+					image: row.original.recieptLink,
+					paymentMethod: row.original.paymentMethod
 				});
 			}
 		},
@@ -62,6 +66,33 @@
 		},
 
 		{
+			accessorKey: 'paymentMethodName',
+			header: 'Payment Method Name',
+			sortable: true,
+			cell: ({ row }) => {
+				return row.original.paymentMethodName || 'No Payment Method Added';
+			}
+		},
+		{
+			accessorKey: 'recieptLink',
+			header: ({ column }) =>
+				renderComponent(DataTableSort, {
+					name: 'Reciepts',
+					onclick: column.getToggleSortingHandler()
+				}),
+			sortable: true,
+			cell: ({ row }) => {
+				// You can pass whatever you need from `row.original` to the component
+				return renderComponent(DataTableLinks, {
+					id: row.original.recieptLink,
+					name: row.original.recieptLink ? 'View Receipt' : 'No Reciept Uploaded',
+					link: '/files',
+					target: '_blank'
+				});
+			}
+		},
+
+		{
 			accessorKey: 'status',
 			header: 'Status',
 			sortable: true,
@@ -83,11 +114,14 @@
 					customerList: data?.fetchedCustomers,
 					customerName: row.original.name,
 					orderItems: data?.allItems,
+					paymentMethodList: data?.paymentMethodList,
 					priceList: data?.fetchedPrices,
 					productList: data?.fetchedProducts,
 					data: data?.editForm,
 					icon: true,
-					status: row.original.status
+					status: row.original.status,
+					image: row.original.recieptLink,
+					paymentMethod: row.original.paymentMethod
 				});
 			}
 		}

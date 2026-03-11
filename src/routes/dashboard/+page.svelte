@@ -1,8 +1,5 @@
 <script lang="ts">
-	import ReorderList from '$lib/components/dashboard/reorder-list.svelte';
-	import { PackageIcon } from '@lucide/svelte';
-
-	import Reports from '$lib/components/dashboard/reports.svelte';
+	import DailyStats from '$lib/components/dashboard/daily-stats.svelte';
 
 	let { data } = $props();
 </script>
@@ -36,19 +33,10 @@
 
 	<!-- Main Content -->
 	<div class="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
-		<Reports report={data.todayReport} />
+		<DailyStats stats={data?.dailyStats} />
 		<!-- Stats Grid -->
 
 		<!-- Reorder Items Grid -->
-
-		<div class="mb-8 grid gap-6 md:grid-cols-2">
-			<ReorderList
-				title="Products to Reorder"
-				description="Items below reorder level"
-				items={data.reorderProducts}
-				icon={PackageIcon}
-			/>
-		</div>
 
 		<!-- Report Section -->
 	</div>

@@ -1,4 +1,3 @@
-import type { prices } from '$lib/server/db/schema';
 import { z } from 'zod/v4';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 5MB limit
 const ACCEPTED_FILE_TYPES = [

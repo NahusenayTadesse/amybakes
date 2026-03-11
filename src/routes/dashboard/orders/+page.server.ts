@@ -1,11 +1,19 @@
-import { superValidate, message } from 'sveltekit-superforms';
+import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { eq, and, sql, min } from 'drizzle-orm';
 
 import { add, edit } from './schema';
 import { db } from '$lib/server/db';
-import { orders, orderItems, products, customers, prices } from '$lib/server/db/schema';
+import {
+	orders,
+	orderItems,
+	products,
+	customers,
+	prices,
+	transactions
+} from '$lib/server/db/schema';
 import type { PageServerLoad, Actions } from './$types';
+import { saveUploadedFile } from '$lib/server/upload';
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod4(add));
@@ -113,19 +121,63 @@ export const actions: Actions = {
 	},
 	edit: async ({ request, locals }) => {
 		const form = await superValidate(request, zod4(edit));
-		console.log(form.data);
+		console.log(form);
+
 		if (!form.valid) {
 			return message(form, { type: 'error', text: 'Please check the form for Errors' });
 		}
 
-		const { id, selectedProducts, customer, status } = form.data;
+		const { id, selectedProducts, customer, status, reciept, paymentMethod } = form.data;
 
 		try {
 			await db.transaction(async (tx) => {
-				await tx
-					.update(orders)
-					.set({ customerId: customer, status })
-					.where(eq(orders.id, Number(id)));
+				if (status === 'delivered' && !paymentMethod) {
+					setError(form, 'paymentMethod', 'Payment Method Error is required for Delivered Orders');
+				}
+
+				let transactionId: number;
+
+				if (reciept) {
+					const recieptLink = await saveUploadedFile(reciept);
+
+					const existingTransaction = await db
+						.select({
+							transactionId: orders.transactionId
+						})
+						.from(orders)
+						.where(eq(orders.id, id))
+						.then((rows) => rows[0]);
+
+					if (existingTransaction.transactionId) {
+						await db.update(transactions).set({
+							paymentMethodId: paymentMethod,
+							amount: String(calculateTotalAmount(selectedProducts)),
+							recieptLink,
+							updatedBy: locals?.user?.id
+						});
+
+						await tx
+							.update(orders)
+							.set({ customerId: customer, status, updatedBy: locals?.user?.id })
+							.where(eq(orders.id, Number(id)));
+					} else {
+						const [tranId] = await db
+							.insert(transactions)
+							.values({
+								paymentMethodId: paymentMethod,
+								amount: calculateTotalAmount(selectedProducts),
+								recieptLink,
+								createdBy: locals?.user?.id
+							})
+							.$returningId();
+						transactionId = tranId.id;
+
+						await tx
+							.update(orders)
+							.set({ customerId: customer, status, transactionId })
+							.where(eq(orders.id, Number(id)));
+					}
+				}
 
 				if (selectedProducts.length) {
 					await tx.delete(orderItems).where(eq(orderItems.orderId, Number(id)));
@@ -163,3 +215,13 @@ function splitNumbers(input: string) {
 		amount: Number(second)
 	};
 }
+
+const calculateTotalAmount = (
+	products: Array<{ amount: number; price: number; quantity: number }>
+) => {
+	return products.reduce((total, item) => {
+		// Convert string amount to number before adding
+		const price = parseFloat(item.amount) || 0;
+		return total + price * item.quantity;
+	}, 0);
+};

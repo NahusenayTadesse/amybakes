@@ -13,7 +13,6 @@
 		OctagonMinus,
 		ListOrdered,
 		CookingPot,
-		Sparkle,
 		Cookie
 	} from '@lucide/svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
@@ -56,6 +55,12 @@
 				{ title: 'All Recipes', url: '/dashboard/recipes', icon: Sheet },
 				{ title: 'Add Recipe', url: '/dashboard/recipes/add-recipe', icon: Plus }
 			]
+		},
+
+		{
+			title: 'Reports',
+			url: '/dashboard/reports',
+			icon: ChartArea
 		},
 
 		{

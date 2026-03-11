@@ -4,7 +4,14 @@ import { eq, and, sql, min } from 'drizzle-orm';
 
 import { add, edit } from './schema';
 import { db } from '$lib/server/db';
-import { orders, orderItems, products, customers, prices } from '$lib/server/db/schema';
+import {
+	orders,
+	orderItems,
+	products,
+	customers,
+	prices,
+	paymentMethods
+} from '$lib/server/db/schema';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async () => {
@@ -17,6 +24,13 @@ export const load: LayoutServerLoad = async () => {
 			name: products.name
 		})
 		.from(products);
+
+	const paymentMethodList = await db
+		.select({
+			value: paymentMethods.id,
+			name: paymentMethods.name
+		})
+		.from(paymentMethods);
 
 	const fetchedPrices = await db
 		.select({
@@ -69,6 +83,7 @@ export const load: LayoutServerLoad = async () => {
 		allItems,
 		fetchedProducts,
 		fetchedCustomers,
-		fetchedPrices
+		fetchedPrices,
+		paymentMethodList
 	};
 };

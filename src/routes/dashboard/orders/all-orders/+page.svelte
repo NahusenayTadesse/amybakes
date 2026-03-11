@@ -29,9 +29,12 @@
 					orderItems: data?.allItems,
 					priceList: data?.fetchedPrices,
 					productList: data?.fetchedProducts,
+					paymentMethodList: data?.paymentMethodList,
 					data: data?.editForm,
 					icon: false,
-					status: row.original.status
+					status: row.original.status,
+					image: row.original.recieptLink,
+					paymentMethod: row.original.paymentMethod
 				});
 			}
 		},
@@ -85,9 +88,12 @@
 					orderItems: data?.allItems,
 					priceList: data?.fetchedPrices,
 					productList: data?.fetchedProducts,
+					paymentMethodList: data?.paymentMethodList,
 					data: data?.editForm,
 					icon: true,
-					status: row.original.status
+					status: row.original.status,
+					image: row.original.recieptLink,
+					paymentMethod: row.original.paymentMethod
 				});
 			}
 		}
@@ -97,12 +103,18 @@
 	import OrderItems from '$lib/components/order-items.svelte';
 
 	import Copy from '$lib/Copy.svelte';
+	import FilterMenu from '$lib/components/Table/FilterMenu.svelte';
+
+	let filteredList = $derived(data?.allData);
 </script>
 
 <svelte:head>
 	<title>All Orders</title>
 </svelte:head>
+<br />
+<br />
 
 {#key data.allData}
-	<DataTable {columns} data={data?.allData} search={true} />
+	<FilterMenu bind:filteredList data={data?.allData} filterKeys={['status', 'name']} />
+	<DataTable {columns} data={filteredList} search={true} />
 {/key}

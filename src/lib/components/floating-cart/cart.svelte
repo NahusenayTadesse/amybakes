@@ -80,20 +80,5 @@
 				<p class="mt-1 text-xs text-muted-foreground/70">Add some products to get started</p>
 			</div>
 		{/if}
-		<!-- <Button
-			size="icon"
-			class="shadow-lg-lg shadow-lg-primary/30 hover:shadow-lg-xl hover:shadow-lg-primary/40 z-100 size-14 rounded-full transition-all duration-200 hover:scale-105"
-			onclick={() => cart.toggle()}
-		>
-			<ShoppingCartIcon class="size-6" />
-			{#if cart.totalItems > 0}
-				<span
-					transition:fade={{ duration: 150 }}
-					class="text-destructive-foreground absolute -top-1 -right-1 flex size-6 items-center justify-center rounded-full bg-destructive text-xs font-bold"
-				>
-					{cart.totalItems > 99 ? '99+' : cart.totalItems}
-				</span>
-			{/if}
-		</Button> -->
 	</Popover.Content>
 </Popover.Root>

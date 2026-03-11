@@ -10,6 +10,8 @@ export const load: PageServerLoad = async () => {
 			id: orders.id,
 			name: customers.name,
 			customerId: customers.id,
+			phone: customers.phone,
+
 			status: orders.status
 		})
 		.from(orders)
