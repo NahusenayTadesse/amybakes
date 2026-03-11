@@ -121,7 +121,6 @@ export const actions: Actions = {
 	},
 	edit: async ({ request, locals }) => {
 		const form = await superValidate(request, zod4(edit));
-		console.log(form);
 
 		if (!form.valid) {
 			return message(form, { type: 'error', text: 'Please check the form for Errors' });
@@ -133,6 +132,13 @@ export const actions: Actions = {
 			await db.transaction(async (tx) => {
 				if (status === 'delivered' && !paymentMethod) {
 					setError(form, 'paymentMethod', 'Payment Method Error is required for Delivered Orders');
+					return message(
+						form,
+						{ type: 'error', text: 'Payment Method Error is required for Delivered Orders' },
+						{
+							status: 500
+						}
+					);
 				}
 
 				let transactionId: number;
