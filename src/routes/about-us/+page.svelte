@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { ArrowRightIcon, ShoppingBagIcon, HeartIcon, PhoneIcon } from '@lucide/svelte';
-	import { CheckCircleIcon, GraduationCapIcon, HeartHandshakeIcon } from '@lucide/svelte';
-	import { SparklesIcon, BadgeCheckIcon, CookieIcon, UtensilsIcon } from '@lucide/svelte';
-	import { BuildingIcon, DogIcon, LeafIcon, TruckIcon } from '@lucide/svelte';
+	import { ArrowRightIcon, ShoppingBagIcon, PhoneIcon } from '@lucide/svelte';
+	import { GraduationCapIcon } from '@lucide/svelte';
+	import { SparklesIcon, CookieIcon, UtensilsIcon } from '@lucide/svelte';
+	import { DogIcon, LeafIcon, TruckIcon } from '@lucide/svelte';
 
-	import {
-		Card,
-		CardContent,
-		CardDescription,
-		CardHeader,
-		CardTitle
-	} from '$lib/components/ui/card';
+	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
+	import Gallery from '$lib/components/gallery.svelte';
+	const teamImages = Array.from({ length: 14 }, (_, i) => `team (${i + 1}).webp`);
 </script>
 
 <svelte:head>
@@ -127,7 +123,7 @@
 	</div>
 </section>
 
-<section class="bg-gradient-to-b from-transparent via-primary/5 to-transparent px-4 py-20 sm:py-32">
+<section class="bg-linear-to-b from-transparent via-primary/5 to-transparent px-4 py-20 sm:py-32">
 	<div class="mx-auto max-w-5xl">
 		<div class="mb-16 text-center">
 			<h2 class="mb-4 text-3xl font-bold sm:text-4xl">The Amy Bakes Guarantees</h2>
@@ -351,6 +347,18 @@
 			</Card>
 		</div>
 	</div>
+</section>
+
+<section class="mx-auto max-w-7xl px-4 py-16 text-center">
+	<div class="mb-12">
+		<h2 class="mb-4 text-3xl font-extrabold tracking-tight md:text-4xl">Meet Our Team</h2>
+		<div class="mx-auto h-1 w-20 rounded-full bg-primary"></div>
+		<p class="text-foreground-background mx-auto mt-4 max-w-2xl text-lg">
+			The passionate individuals working behind the scenes to bring our vision to life.
+		</p>
+	</div>
+
+	<Gallery images={teamImages} title="Our Team" />
 </section>
 
 <section class="bg-linear-to-r from-primary/15 via-purple-50/10 to-primary/15 px-4 py-20 sm:py-32">

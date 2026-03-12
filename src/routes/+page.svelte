@@ -2,6 +2,7 @@
 	import { setCart } from '$lib/hooks/cart.svelte.js';
 
 	import ProductCard from '$lib/components/product-card.svelte';
+	import Gallery from '$lib/components/gallery.svelte';
 
 	// Set app and cart hooks
 	setCart();
@@ -22,6 +23,8 @@
 			return acc;
 		}, {})
 	);
+
+	const teamImages = Array.from({ length: 14 }, (_, i) => `team (${i + 1}).webp`);
 </script>
 
 <svelte:head>
@@ -124,6 +127,17 @@
 			</div>
 		</section>
 	{/each}
+	<section class="mx-auto max-w-7xl py-16 text-center">
+		<div class="mb-12">
+			<h2 class="mb-4 text-3xl font-extrabold tracking-tight md:text-4xl">Meet Our Team</h2>
+			<div class="mx-auto h-1 w-20 rounded-full bg-primary"></div>
+			<p class="text-foreground-background mx-auto mt-4 max-w-2xl text-lg">
+				The passionate individuals working behind the scenes to bring our vision to life.
+			</p>
+		</div>
+
+		<Gallery images={teamImages} title="Our Team" />
+	</section>
 </main>
 
 <Accordion />
