@@ -3,6 +3,7 @@
 		Users,
 		UserRoundCog,
 		ChartArea,
+		Mail,
 		LayoutDashboard,
 		Container,
 		Banknote,
@@ -55,6 +56,12 @@
 				{ title: 'All Recipes', url: '/dashboard/recipes', icon: Sheet },
 				{ title: 'Add Recipe', url: '/dashboard/recipes/add-recipe', icon: Plus }
 			]
+		},
+
+		{
+			title: 'Messages',
+			url: '/dashboard/messages',
+			icon: Mail
 		},
 
 		{

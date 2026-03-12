@@ -1,15 +1,20 @@
 <script lang="ts">
 	import { SearchIcon, ShoppingBag, Flower, MenuIcon, XIcon, CookieIcon } from '@lucide/svelte';
-	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import DarkMode from './DarkMode.svelte';
 	let mobileMenuOpen = $state(false);
 
+	import { Sheet, SheetContent, SheetTrigger } from '$lib/components/ui/sheet';
+	import { Button } from '$lib/components/ui/button';
+
+	let isOpen = $state(false);
+
+	const handleMenuClick = (href: string) => {
+		isOpen = false;
+	};
 	import { page } from '$app/state';
 
-	let { data } = $props();
-
-	const navLinks = [
+	const menuItems = [
 		{ label: 'Home', href: '/' },
 
 		{ label: 'About Us', href: '/about-us' },
@@ -21,74 +26,75 @@
 </script>
 
 <header
-	class="sticky top-0 z-50 w-full bg-primary backdrop-blur supports-backdrop-filter:bg-primary"
+	class="sticky top-0 z-50 w-full bg-primary px-2 py-2 backdrop-blur supports-backdrop-filter:bg-primary lg:px-16"
 >
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="flex h-16 items-center justify-between">
-			<!-- Logo -->
-			<div class="flex shrink-0 items-center gap-2">
-				<a href="/" class="inline-block">
-					<img
-						src="/logo.webp"
-						width="128"
-						height="96"
-						class="h-16 w-auto object-contain"
-						alt="Amy Bakes Home"
-						fetchpriority="high"
-					/>
-				</a>
+	<div class="flex h-14 items-center justify-between px-4 md:px-6">
+		<!-- Logo/Title -->
+		<div class="flex shrink-0 items-center gap-2">
+			<a href="/" class="inline-block">
+				<img
+					src="/logo.webp"
+					width="128"
+					height="96"
+					class="h-16 w-auto object-contain"
+					alt="Amy Bakes Home"
+					fetchpriority="high"
+				/>
+			</a>
 
-				<!-- <span class="text-xl font-bold text-foreground">Lalo Bakery Solution</span> -->
-			</div>
-
-			<!-- Desktop Navigation -->
-			<nav class="hidden items-center gap-8 md:flex">
-				{#each navLinks as link (link.href)}
-					<Button
-						href={link.href}
-						variant={page.url.pathname === link.href ? 'secondary' : 'default'}
-					>
-						{link.label}
-					</Button>
-				{/each}
-			</nav>
-			<div class="flex flex-row items-center justify-end">
-				<div class="m-2">
-					<!-- Search and Auth -->
-				</div>
-				<DarkMode />
-			</div>
-
-			<!-- Mobile Menu Button -->
-			<button class="p-2 md:hidden" onclick={() => (mobileMenuOpen = !mobileMenuOpen)}>
-				{#if mobileMenuOpen}
-					<XIcon class="size-6" />
-				{:else}
-					<MenuIcon class="size-6" />
-				{/if}
-			</button>
+			<!-- <span class="text-xl font-bold text-foreground">Lalo Bakery Solution</span> -->
 		</div>
 
-		<!-- Mobile Navigation -->
-		{#if mobileMenuOpen}
-			<div class="flex flex-col gap-4 border-t py-4 md:hidden">
-				<div class="relative">
-					<Input type="text" placeholder="Search products..." class="pr-4 pl-10" />
-					<SearchIcon
-						class="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-					/>
-				</div>
-				<nav class="flex flex-col gap-3">
-					{#each navLinks as link (link.href)}
-						<a
-							href={link.href}
-							class="py-2 text-sm font-medium text-foreground/70 transition-colors hover:text-foreground"
-						>
-							{link.label}
-						</a>
-					{/each}
-				</nav>
+		<!-- Desktop Menu -->
+		<nav class="hidden items-center gap-1 md:flex">
+			{#each menuItems as item (item.href)}
+				<Button
+					variant={page.url.pathname === item.href ? 'secondary' : 'default'}
+					size="sm"
+					href={item.href}
+					onclick={() => handleMenuClick(item.href)}
+				>
+					{item.label}
+				</Button>
+			{/each}
+		</nav>
+
+		<div class="flex flex-row items-center justify-end">
+			<div class="m-2">
+				<!-- Search and Auth -->
 			</div>
-		{/if}
+			<DarkMode />
+		</div>
+
+		<!-- Mobile Menu -->
+		<div class="md:hidden">
+			<Sheet bind:open={isOpen}>
+				<SheetTrigger>
+					{#snippet child({ props: triggerProps })}
+						<Button variant="default" size="icon" {...triggerProps}>
+							{#if isOpen}
+								<XIcon class="size-5" />
+							{:else}
+								<MenuIcon class="size-5" />
+							{/if}
+						</Button>
+					{/snippet}
+				</SheetTrigger>
+				<SheetContent side="right" class="w-64">
+					<nav class="mt-8 flex flex-col gap-2">
+						{#each menuItems as item (item.href)}
+							<Button
+								variant="ghost"
+								href={item.href}
+								class="justify-start"
+								onclick={() => handleMenuClick(item.href)}
+							>
+								{item.label}
+							</Button>
+						{/each}
+					</nav>
+				</SheetContent>
+			</Sheet>
+		</div>
 	</div>
 </header>

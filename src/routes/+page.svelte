@@ -2,7 +2,6 @@
 	import { setCart } from '$lib/hooks/cart.svelte.js';
 
 	import ProductCard from '$lib/components/product-card.svelte';
-	import Gallery from '$lib/components/gallery.svelte';
 
 	// Set app and cart hooks
 	setCart();
@@ -23,7 +22,7 @@
 			return acc;
 		}, {})
 	);
-
+	import Gallery from '$lib/components/gallery.svelte';
 	const teamImages = Array.from({ length: 14 }, (_, i) => `team (${i + 1}).webp`);
 </script>
 
