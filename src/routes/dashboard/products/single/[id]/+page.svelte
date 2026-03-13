@@ -133,16 +133,6 @@
 				Back
 			{/if}
 		</Button>
-		{#key data?.product}
-			<Adjustment data={data.adjustForm} name={data.product?.name} />
-		{/key}
-		<Button href="/dashboard/products/{page.params.id}/ranges/{getCurrentMonthRange()}">
-			<History /> See Change History
-		</Button>
-		<Damaged data={data.damagedForm} name={data.product?.name} employees={data.employeesList} />
-		<Button href={`/dashboard/products/${page.params.id}/damaged/${getCurrentMonthRange()}`}>
-			<History /> See Damaged History
-		</Button>
 
 		<Delete redirect="/dashboard/products" />
 	</div>
@@ -315,7 +305,7 @@
 			</Button>
 
 			{#if !editGallery}
-				<Gallery images={data?.images} title={data?.product?.name} />
+				<Gallery {images} title={data?.product?.name} />
 			{:else}
 				<EditGallery data={data?.galleryEdit} bind:images />
 			{/if}
