@@ -89,10 +89,7 @@
 					name: 'Amount',
 					onclick: column.getToggleSortingHandler()
 				}),
-			sortable: true,
-			cell: ({ row }) => {
-				return row.original.amount ?? 0 + 'Pieces';
-			}
+			sortable: true
 		},
 
 		{

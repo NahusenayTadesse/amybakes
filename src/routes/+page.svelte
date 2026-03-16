@@ -22,8 +22,8 @@
 			return acc;
 		}, {})
 	);
-	import Gallery from '$lib/components/gallery.svelte';
-	const teamImages = Array.from({ length: 14 }, (_, i) => `team (${i + 1}).webp`);
+	// import Gallery from '$lib/components/gallery.svelte';
+	// const teamImages = Array.from({ length: 14 }, (_, i) => `team (${i + 1}).webp`);
 </script>
 
 <svelte:head>
@@ -126,7 +126,7 @@
 			</div>
 		</section>
 	{/each}
-	<section class="mx-auto max-w-7xl py-16 text-center">
+	<!-- <section class="mx-auto max-w-7xl py-16 text-center">
 		<div class="mb-12">
 			<h2 class="mb-4 text-3xl font-extrabold tracking-tight md:text-4xl">Meet Our Team</h2>
 			<div class="mx-auto h-1 w-20 rounded-full bg-primary"></div>
@@ -136,7 +136,7 @@
 		</div>
 
 		<Gallery images={teamImages} title="Our Team" />
-	</section>
+	</section> -->
 </main>
 
 <Accordion />

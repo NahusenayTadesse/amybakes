@@ -3,7 +3,7 @@ const ethiopianPhoneRegex = /^(?:\+251|251|0)?([79]\d{8})$/;
 
 export const add = z.object({
 	name: z.string().min(1, 'Name is required'),
-	email: z.email('Invalid email').optional(),
+	email: z.string('Invalid email').optional(),
 	phone: z
 		.string()
 		.trim()

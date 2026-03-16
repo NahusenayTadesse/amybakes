@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pwa-cache-v1';
+const CACHE_NAME = 'amybakes-cache-v1';
 const OFFLINE_URL = '/offline.html';
 
 // Pre-cache essential assets

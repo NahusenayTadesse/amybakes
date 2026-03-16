@@ -38,12 +38,12 @@
 			<div class="flex items-center gap-2">
 				<h4 class="truncate text-sm font-medium">{item.productName}</h4>
 				<span
-					class="inline-flex items-center rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary ring-1 ring-primary/20 ring-inset"
+					class="inline-flex items-center rounded-md bg-primary/10 px-4 py-0.5 text-[12px] font-medium text-foreground ring-1 ring-primary/20 ring-inset"
 				>
-					{item.amount}
+					{item.amount} Pieces
 				</span>
 			</div>
-			<p class="text-xs text-muted-foreground">ID: {item.productId}</p>
+			<p class="text-xs text-muted-foreground">Pieces: {item.amount}</p>
 		</div>
 		<Button
 			size="icon"

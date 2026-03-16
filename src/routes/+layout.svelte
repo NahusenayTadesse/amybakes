@@ -31,7 +31,7 @@
 	// This initializes the class and puts it into Svelte's context
 	setCart();
 
-	let { data, children } = $props();
+	let { children } = $props();
 
 	// async function requestNotificationPermission() {
 	// 	if (!('Notification' in window)) return;
@@ -59,7 +59,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href="/logo.webp" />
+	<link rel="icon" href="/logo192.png" />
 </svelte:head>
 <ModeWatcher />
 
@@ -78,7 +78,7 @@
 {/if}
 
 {#if !page.url.pathname.startsWith('/dashboard')}
-	<Header data={data?.user?.name ?? ''} />
+	<Header  />
 	{@render children()}
 
 	<Footer />

@@ -127,6 +127,15 @@
 						placeholder=""
 					/>
 
+					<InputComp
+						label="Shipping Address"
+						name="address"
+						type="textarea"
+						{form}
+						{errors}
+						required
+						placeholder="Enter your shipping address" />
+
 					<div class="pt-4">
 						<Button
 							type="submit"
