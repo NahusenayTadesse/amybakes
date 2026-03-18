@@ -20,7 +20,6 @@
 		{ label: 'About Us', href: '/about-us' },
 
 		{ label: 'Shop', href: '/shop' },
-		{ label: 'Recipes', href: '/recipes' },
 		{ label: 'Contact Us', href: '/contact-us' }
 	];
 </script>

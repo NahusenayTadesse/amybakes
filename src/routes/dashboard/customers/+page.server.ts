@@ -14,6 +14,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			id: customers.id,
 			customerName: customers.name,
 			phone: customers.phone,
+			address: customers.address,
 			orderCount: count(orders.id),
 			daysSinceJoined: sql<number>`DATEDIFF(CURRENT_DATE, ${customers.createdAt})`,
 			createdBy: user.name,

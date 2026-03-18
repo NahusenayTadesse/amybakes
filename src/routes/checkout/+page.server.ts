@@ -24,7 +24,7 @@ export const actions: Actions = {
 			return message(form, { type: 'error', text: 'Please check the form for Errors' });
 		}
 
-		const { name, email, phone, selectedProducts } = form.data;
+		const { name, email, phone, address, selectedProducts } = form.data;
 
 		try {
 			await db.transaction(async (tx) => {
@@ -38,10 +38,15 @@ export const actions: Actions = {
 
 				if (excCustomer) {
 					customer = excCustomer.value;
+
+					await tx
+						.update(customers)
+						.set({ name, email, address })
+						.where(eq(customers.id, customer));
 				} else {
 					const [newCustomer] = await tx
 						.insert(customers)
-						.values({ name, email, phone })
+						.values({ name, email, phone, address })
 						.$returningId();
 					customer = newCustomer.id;
 				}

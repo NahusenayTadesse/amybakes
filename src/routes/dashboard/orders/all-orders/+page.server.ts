@@ -11,6 +11,7 @@ export const load: PageServerLoad = async () => {
 			name: customers.name,
 			phone: customers.phone,
 			customerId: customers.id,
+			address: customers.address,
 			paymentMethod: transactions.paymentMethodId,
 			recieptLink: transactions.recieptLink,
 			status: orders.status

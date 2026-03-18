@@ -46,6 +46,7 @@ export const customers = mysqlTable('customers', {
 	email: varchar('email', { length: 100 }),
 	phone: varchar('phone', { length: 20 }).notNull().unique(),
 	address: varchar('address', { length: 255 }),
+
 	...secureFields
 });
 

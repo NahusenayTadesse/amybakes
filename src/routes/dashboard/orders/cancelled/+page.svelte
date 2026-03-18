@@ -4,6 +4,7 @@
 	import DataTableSort from '$lib/components/Table/data-table-sort.svelte';
 	import Statuses from '$lib/components/Table/statuses.svelte';
 	import Edit from '../edit.svelte';
+	import AddressViewer from '$lib/components/addressViewer.svelte';
 
 	const columns = [
 		{
@@ -46,6 +47,12 @@
 					data: row.original.phone
 				});
 			}
+		},
+		{
+			accessorKey: 'address',
+			header: 'Address  ',
+			sortable: true,
+			cell: ({ row }) => renderComponent(AddressViewer, { address: row.original.address })
 		},
 
 		{

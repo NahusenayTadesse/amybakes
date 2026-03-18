@@ -10,7 +10,7 @@
 	import { Button } from '$lib/components/ui/button';
 
 	import { IconBrandFacebook, IconBrandInstagram, IconBrandTiktok } from '@tabler/icons-svelte';
-	import { MailIcon, MessageCircleIcon, SendIcon, PhoneIcon } from '@lucide/svelte';
+	import { MailIcon, MessageCircleIcon, SendIcon, Send, PhoneIcon } from '@lucide/svelte';
 
 	import { superForm } from 'sveltekit-superforms/client';
 	import { toast } from 'svelte-sonner';
@@ -45,7 +45,7 @@
 		{
 			name: 'Telegram',
 			url: 'https://t.me/LaloBakery',
-			icon: MessageCircleIcon,
+			icon: Send,
 			color: 'hover:text-blue-400'
 		}
 	];
@@ -229,7 +229,6 @@
 							<span class="text-muted-foreground">Saturday</span>
 							<span class="font-semibold">9:00 AM - 9:00 PM</span>
 						</div>
-					
 					</CardContent>
 				</Card>
 			</div>

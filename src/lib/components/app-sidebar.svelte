@@ -49,16 +49,6 @@
 		},
 
 		{
-			title: 'Recipes',
-			url: '/dashboard/recipes',
-			icon: CookingPot,
-			items: [
-				{ title: 'All Recipes', url: '/dashboard/recipes', icon: Sheet },
-				{ title: 'Add Recipe', url: '/dashboard/recipes/add-recipe', icon: Plus }
-			]
-		},
-
-		{
 			title: 'Messages',
 			url: '/dashboard/messages',
 			icon: Mail
@@ -127,10 +117,14 @@
 	>
 		<Sidebar.Group>
 			<Sidebar.GroupLabel>
-				<div class="flex flex-row items-center justify-center gap-4">
-					<Cookie class="h-10 w-10 text-primary" />
-					<h4 class="text-center text-[24px]! text-foreground">Amy Bakes</h4>
-				</div></Sidebar.GroupLabel
+				<a
+					class="mb-8 flex flex-row items-start justify-start gap-4 py-4"
+					href="/"
+					title="Go to Website Home Page"
+					target="_blank"
+				>
+					<img src="/logo512.png" class="mt-4 h-auto w-full justify-self-start" alt="Logo" />
+				</a></Sidebar.GroupLabel
 			>
 			<Sidebar.GroupContent class="my-4">
 				<NavMain items={navigation} />

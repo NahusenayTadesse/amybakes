@@ -11,6 +11,7 @@
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { CircleAlert } from '@lucide/svelte';
 	import GalleryUpload from './GalleryUpload.svelte';
+	import AddressInput from './AddressInput.svelte';
 
 	let {
 		label,
@@ -59,6 +60,9 @@
 			<Label for={name} class="capitalize">{placeholder}</Label>
 			<input type="hidden" {name} bind:value={$form[name]} />
 		</div>
+	{:else if type === 'address'}
+		<AddressInput bind:query={$form[name]} />
+		<input type="hidden" {name} bind:value={$form[name]} />
 	{:else}
 		<Input {type} {name} bind:value={$form[name]} {max} {min} {placeholder} {required} />
 	{/if}

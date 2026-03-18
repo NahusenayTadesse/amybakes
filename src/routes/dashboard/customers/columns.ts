@@ -3,6 +3,7 @@ import DataTableLinks from '$lib/components/Table/data-table-links.svelte';
 import Copy from '$lib/Copy.svelte';
 import DataTableActions from './data-table-actions.svelte';
 import DataTableSort from '$lib/components/Table/data-table-sort.svelte';
+import AddressViewer from '$lib/components/addressViewer.svelte';
 
 export const columns = [
 	{
@@ -35,7 +36,12 @@ export const columns = [
 		sortable: true,
 		cell: ({ row }) => renderComponent(Copy, { data: row.original.phone })
 	},
-
+	{
+		accessorKey: 'address',
+		header: 'Address  ',
+		sortable: true,
+		cell: ({ row }) => renderComponent(AddressViewer, { address: row.original.address })
+	},
 	{
 		accessorKey: 'createdAt',
 		header: ({ column }) =>

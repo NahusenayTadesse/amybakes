@@ -5,7 +5,7 @@
 	import Statuses from '$lib/components/Table/statuses.svelte';
 	import Edit from '../edit.svelte';
 	import DataTableLinks from '$lib/components/Table/data-table-links.svelte';
-
+	import AddressViewer from '$lib/components/addressViewer.svelte';
 	const columns = [
 		{
 			accessorKey: 'index',
@@ -50,7 +50,12 @@
 				});
 			}
 		},
-
+		{
+			accessorKey: 'address',
+			header: 'Address  ',
+			sortable: true,
+			cell: ({ row }) => renderComponent(AddressViewer, { address: row.original.address })
+		},
 		{
 			accessorKey: 'items',
 			header: 'Items',

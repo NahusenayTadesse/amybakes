@@ -128,13 +128,14 @@
 					/>
 
 					<InputComp
-						label="Shipping Address"
+						label="Address"
 						name="address"
-						type="textarea"
+						type="address"
 						{form}
 						{errors}
 						required
-						placeholder="Enter your shipping address" />
+						placeholder="Enter your shipping address"
+					/>
 
 					<div class="pt-4">
 						<Button

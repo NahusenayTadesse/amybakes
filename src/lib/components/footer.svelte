@@ -7,7 +7,10 @@
 		MapPinIcon,
 		MessageCircleIcon,
 		MapPin,
-		Cookie
+		Cookie,
+		Facebook,
+		Send,
+		Instagram
 	} from '@lucide/svelte';
 	let email = $state('');
 
@@ -18,32 +21,25 @@
 		email = '';
 	};
 
-	import { IconBrandFacebook, IconBrandInstagram, IconBrandTiktok } from '@tabler/icons-svelte';
-
 	const socialLinks = [
 		{
 			name: 'Instagram',
 			// Updated placeholder handles to reflect the brand
 			url: 'https://www.instagram.com/amybakes',
-			icon: IconBrandInstagram,
+			icon: Instagram,
 			color: 'hover:text-pink-500'
 		},
 		{
-			name: 'TikTok',
-			url: 'https://www.tiktok.com/@amybakes',
-			icon: IconBrandTiktok,
+			name: 'Facebook',
+			url: 'https://www.facebook.com/@amybakes',
+			icon: Facebook,
 			color: 'hover:text-black dark:hover:text-white'
 		},
-		{
-			name: 'Facebook',
-			url: 'https://facebook.com/AmyBakes',
-			icon: IconBrandFacebook,
-			color: 'hover:text-blue-600'
-		},
+
 		{
 			name: 'Telegram',
 			url: 'https://t.me/AmyBakes',
-			icon: MessageCircleIcon,
+			icon: Send,
 			color: 'hover:text-blue-400'
 		}
 	];
@@ -164,7 +160,15 @@
 
 			<div class="mt-12 border-t border-border/50 pt-8 text-center text-xs text-foreground/50">
 				<p>
-					© {new Date().getFullYear()} Glam Beauty & Spa. Handcrafted Elegance. All rights reserved.
+					© {new Date().getFullYear()} Amy Bakes. Authentic Baking. All rights reserved. Powered By:
+					<a
+						href="https://leoradigitals.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-foreground/50 hover:text-foreground"
+					>
+						Leora Digitals
+					</a>
 				</p>
 			</div>
 		</div>
