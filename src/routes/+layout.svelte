@@ -59,7 +59,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href="/logo192.png" />
+	<link rel="icon" href="/logo512.png" />
 </svelte:head>
 <ModeWatcher />
 
@@ -78,7 +78,7 @@
 {/if}
 
 {#if !page.url.pathname.startsWith('/dashboard')}
-	<Header  />
+	<Header />
 	{@render children()}
 
 	<Footer />
