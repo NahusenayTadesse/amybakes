@@ -2,10 +2,35 @@ import { renderComponent } from '$lib/components/ui/data-table/index.js';
 import DataTableLinks from '$lib/components/Table/data-table-links.svelte';
 import DataTableActions from './data-table-actions.svelte';
 import DataTableSort from '$lib/components/Table/data-table-sort.svelte';
+import DiscountName from './discountName.svelte';
+import Discount from './discount.svelte';
+
 import ImageViewer from '$lib/components/Table/image-viewer.svelte';
 import PriceList from './priceList.svelte';
+import type { ColumnDef } from '@tanstack/table-core';
+import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 
 export const columns = [
+	{
+		id: 'select',
+		accessorKey: 'id',
+		header: ({ table }) =>
+			renderComponent(Checkbox, {
+				checked: table.getIsAllPageRowsSelected(),
+				indeterminate: table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected(),
+				onCheckedChange: (value) => table.toggleAllPageRowsSelected(!!value),
+				'aria-label': 'Select all'
+			}),
+		cell: ({ row }) =>
+			renderComponent(Checkbox, {
+				checked: row.getIsSelected(),
+				onCheckedChange: (value) => row.toggleSelected(!!value),
+				'aria-label': 'Select row'
+			}),
+		enableSorting: false,
+		enableHiding: false
+	},
+
 	{
 		accessorKey: 'index',
 		header: '#',
@@ -75,6 +100,29 @@ export const columns = [
 	{
 		accessorKey: 'description',
 		header: 'Description'
+	},
+
+	{
+		accessorKey: 'discount',
+		header: 'Discount Name',
+		cell: ({ row }) => {
+			// You can pass whatever you need from `row.original` to the component
+			return renderComponent(Discount, {
+				discount: row.original.discountPercentage
+			});
+		}
+	},
+
+	{
+		accessorKey: 'discountName',
+		header: 'Discount Name',
+		cell: ({ row }) => {
+			// You can pass whatever you need from `row.original` to the component
+			return renderComponent(DiscountName, {
+				discountName: row.original.discountName,
+				discountDescription: row.original.discountDescription
+			});
+		}
 	},
 
 	{

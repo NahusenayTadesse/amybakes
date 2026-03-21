@@ -1,0 +1,1 @@
+ALTER TABLE `discounts` DROP INDEX `discounts_name_unique`;

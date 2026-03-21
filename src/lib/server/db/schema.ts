@@ -54,7 +54,7 @@ export const discounts = mysqlTable('discounts', {
 	id: int('id').primaryKey().autoincrement(),
 	amount: decimal('amount', { precision: 10, scale: 2 }),
 	productId: int('product_id').references(() => products.id, { onDelete: 'cascade' }),
-	name: varchar('name', { length: 50 }).notNull().unique(),
+	name: varchar('name', { length: 50 }).notNull(),
 	description: varchar('description', { length: 255 }),
 	...secureFields
 });
