@@ -58,7 +58,7 @@
 <Hero />
 <About />
 
-<header class="my-16 text-center">
+<header class="mt-16 text-center">
 	<div class="mb-6 inline-flex items-center rounded-full bg-secondary px-4 py-1.5">
 		<span class="text-xs font-bold tracking-wider text-secondary-foreground uppercase">
 			Fresh from the oven
@@ -84,7 +84,64 @@
 </header>
 
 <hr class="mb-12 border-muted/30" />
+
 <main class="container mx-auto px-4 py-12 pb-24">
+	<section class="mb-16 last:mb-0">
+		<div class="relative px-2">
+			<Carousel.Root
+				opts={{
+					align: 'start',
+					loop: true
+				}}
+				class="w-full"
+			>
+				<Carousel.Content class="-ml-4">
+					{#each data?.productList?.filter( (product) => data?.bestSelling.some((best) => best.id === product.productId) ) as product (product.productId)}
+						<Carousel.Item class="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+							<div class="group h-full transition-transform duration-300 hover:-translate-y-2">
+								<ProductCard {...product} />
+							</div>
+						</Carousel.Item>
+					{/each}
+				</Carousel.Content>
+
+				<div class="hidden lg:block">
+					<Carousel.Previous
+						class="border-secondary bg-background text-secondary-foreground hover:bg-secondary"
+					/>
+					<Carousel.Next
+						class="border-secondary bg-background text-secondary-foreground hover:bg-secondary"
+					/>
+				</div>
+			</Carousel.Root>
+		</div>
+	</section>
+
+	<header class="my-16 text-center">
+		<div class="mb-6 inline-flex items-center rounded-full bg-secondary px-4 py-1.5">
+			<span class="text-xs font-bold tracking-wider text-secondary-foreground uppercase">
+				Categories
+			</span>
+		</div>
+
+		<h1 class="mb-4 text-4xl font-extrabold tracking-tight text-foreground lg:text-6xl">
+			Our <span class="text-primary">Categories</span>
+		</h1>
+
+		<p class="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground">
+			Explore our various different types of
+			<span
+				class="font-semibold text-foreground underline decoration-primary/30 decoration-2 underline-offset-4"
+				>cookies</span
+			>
+			and jumbo
+			<span
+				class="font-semibold text-foreground underline decoration-primary/30 decoration-2 underline-offset-4"
+				>muffins</span
+			>, baked daily with premium ingredients.
+		</p>
+	</header>
+
 	{#each Object.entries(groupedProducts) as [categoryName, products] (categoryName)}
 		<section class="mb-16 last:mb-0">
 			<div class="mb-8 flex flex-col items-start gap-1 border-l-4 border-primary pl-6">
@@ -126,17 +183,6 @@
 			</div>
 		</section>
 	{/each}
-	<!-- <section class="mx-auto max-w-7xl py-16 text-center">
-		<div class="mb-12">
-			<h2 class="mb-4 text-3xl font-extrabold tracking-tight md:text-4xl">Meet Our Team</h2>
-			<div class="mx-auto h-1 w-20 rounded-full bg-primary"></div>
-			<p class="text-foreground-background mx-auto mt-4 max-w-2xl text-lg">
-				The passionate individuals working behind the scenes to bring our vision to life.
-			</p>
-		</div>
-
-		<Gallery images={teamImages} title="Our Team" />
-	</section> -->
 </main>
 
 <Accordion />

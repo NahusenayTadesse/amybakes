@@ -9,11 +9,11 @@
 	} from '@lucide/svelte';
 
 	interface DailyStats {
-		totalOrders: number;
-		totalItemsSold: number;
-		totalRevenue: number;
-		averageOrderValue: number;
-		totalPaymentsCollected: number;
+		totalOrders: number | string;
+		totalItemsSold: number | string;
+		totalRevenue: number | string;
+		averageOrderValue: number | string;
+		totalPaymentsCollected: number | string;
 	}
 
 	const { stats }: { stats: DailyStats } = $props();

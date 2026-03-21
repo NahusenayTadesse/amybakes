@@ -1,9 +1,28 @@
 import { db } from '$lib/server/db';
-import { products, productCategories, user, roles, prices } from '$lib/server/db/schema';
-import { eq, min } from 'drizzle-orm';
+import {
+	products,
+	productCategories,
+	user,
+	roles,
+	prices,
+	orders,
+	orderItems
+} from '$lib/server/db/schema';
+import { eq, min, desc, sum, count } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async () => {
+	const bestSelling = await db
+		.select({
+			id: products.id
+		})
+		.from(products)
+		// Join products to orderItems, not orders
+		.innerJoin(orderItems, eq(orderItems.productId, products.id))
+		.groupBy(products.id)
+		.orderBy(desc(sum(orderItems.quantity)))
+		.limit(10);
+
 	const productsData = await db
 		.select({
 			productId: products.id,
@@ -38,6 +57,7 @@ export const load: LayoutServerLoad = async () => {
 
 	// 3. Return everything at once
 	return {
-		productList
+		productList,
+		bestSelling
 	};
 };

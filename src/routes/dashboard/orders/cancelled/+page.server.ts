@@ -1,4 +1,4 @@
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, sql, desc } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
 import { orders, orderItems, products, customers } from '$lib/server/db/schema';
@@ -24,6 +24,7 @@ export const load: PageServerLoad = async () => {
 			id: orderItems.id,
 			orderId: orderItems.orderId,
 			product: products.name,
+			createdAt: orders.createdAt,
 			quantity: orderItems.quantity,
 			amount: orderItems.amount,
 			productId: orderItems.productId,
@@ -32,7 +33,8 @@ export const load: PageServerLoad = async () => {
 		})
 		.from(orderItems)
 		.leftJoin(orders, and(eq(orders.id, orderItems.orderId), eq(orders.status, 'pending')))
-		.leftJoin(products, eq(orderItems.productId, products.id));
+		.leftJoin(products, eq(orderItems.productId, products.id))
+		.orderBy(desc(orders.createdAt));
 
 	return {
 		allData,

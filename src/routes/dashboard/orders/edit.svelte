@@ -126,14 +126,14 @@
 					{customerName}
 				{/if}
 			</Tooltip.Trigger>
-			<Tooltip.Content>Edit {customerName}</Tooltip.Content>
+			<Tooltip.Content>Edit {customerName}'s Order</Tooltip.Content>
 		</Tooltip.Root>
 	</Dialog.Trigger>
 
 	<Dialog.Content class="bg-background px-4">
 		<ScrollArea class="h-128 w-full px-2" orientation="both">
 			<Dialog.Header>
-				<Dialog.Title class="text-center text-4xl">Edit {customerName}</Dialog.Title>
+				<Dialog.Title class="text-center text-4xl">Edit {customerName}'s Order</Dialog.Title>
 			</Dialog.Header>
 			<form
 				action="/dashboard/orders/?/edit"

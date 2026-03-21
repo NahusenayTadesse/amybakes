@@ -1,4 +1,4 @@
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, sql, desc } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
 import {
@@ -28,7 +28,8 @@ export const load: PageServerLoad = async () => {
 		.leftJoin(customers, eq(orders.customerId, customers.id))
 		.leftJoin(transactions, eq(orders.transactionId, transactions.id))
 		.leftJoin(paymentMethods, eq(transactions.paymentMethodId, paymentMethods.id))
-		.where(eq(orders.status, 'delivered'));
+		.where(eq(orders.status, 'delivered'))
+		.orderBy(desc(orders.createdAt));
 
 	const allItems = await db
 		.select({

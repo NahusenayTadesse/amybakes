@@ -34,6 +34,7 @@
 	<!-- Main Content -->
 	<div class="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
 		<DailyStats stats={data?.dailyStats} />
+
 		<!-- Stats Grid -->
 
 		<!-- Reorder Items Grid -->

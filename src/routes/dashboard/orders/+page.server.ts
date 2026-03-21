@@ -1,6 +1,6 @@
 import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { eq, and, sql, min } from 'drizzle-orm';
+import { eq, and, sql, desc } from 'drizzle-orm';
 
 import { add, edit } from './schema';
 import { db } from '$lib/server/db';
@@ -54,7 +54,8 @@ export const load: PageServerLoad = async () => {
 		})
 		.from(orders)
 		.leftJoin(customers, eq(orders.customerId, customers.id))
-		.where(eq(orders.status, 'pending'));
+		.where(eq(orders.status, 'pending'))
+		.orderBy(desc(orders.createdAt));
 
 	const allItems = await db
 		.select({
@@ -135,7 +136,7 @@ export const actions: Actions = {
 					setError(form, 'paymentMethod', 'Payment Method Error is required for Delivered Orders');
 					return message(
 						form,
-						{ type: 'error', text: 'Payment Method Error is required for Delivered Orders' },
+						{ type: 'error', text: 'Payment Method is required for Delivered Orders' },
 						{
 							status: 500
 						}

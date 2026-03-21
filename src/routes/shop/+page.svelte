@@ -2,19 +2,17 @@
 	import ProductCard from '$lib/components/product-card.svelte';
 	import { Input } from '$lib/components/ui/input';
 	import { Checkbox } from '$lib/components/ui/checkbox';
-	import { Button } from '$lib/components/ui/button';
-	import { SearchIcon, XIcon } from '@lucide/svelte';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { SearchIcon, XIcon, SlidersHorizontal, X } from '@lucide/svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { buttonVariants } from '$lib/components/ui/button/index.js';
+	import { slide, fade } from 'svelte/transition';
+
 	let { data } = $props();
 
-	// Set app hook
-
-	// Search state
 	let searchQuery = $state('');
 
-	// Price range state
-
-	// Category filter state
 	let selectedCategories = $state<string[]>([]);
 	let minPrice = $state(0);
 	let maxPrice = $derived(Math.max(...data.productList.map((p) => Number(p.price))));
@@ -86,6 +84,11 @@
 			maxPrice < maxProductPrice ||
 			selectedCategories.length > 0
 	);
+	import { isMobile } from '$lib/global.svelte';
+
+	let Icon = $derived(filter ? X : SlidersHorizontal);
+
+	let filter = $state(isMobile() ? false : true);
 </script>
 
 <svelte:head>
@@ -142,24 +145,43 @@
 	</header>
 
 	<!-- Main Content -->
-	<main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+	<main class="mx-auto max-w-full px-4 py-12 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
 			<!-- Filters Sidebar -->
-			<aside class="lg:col-span-1">
-				<div class="sticky top-24 space-y-6">
-					<!-- Filter Header -->
-					<div class="flex items-center justify-between">
-						<h2 class="text-lg font-semibold">Filters</h2>
-						{#if hasActiveFilters}
-							<Button variant="ghost" size="sm" onclick={resetFilters} class="h-8 text-xs">
-								<XIcon size={14} />
-								Reset
-							</Button>
-						{/if}
-					</div>
 
-					<!-- Price Range Filter -->
-					<div class="flex flex-col gap-4 border-b pb-6">
+			{#if isMobile()}
+				<Tooltip.Provider>
+					<Tooltip.Root>
+						<Tooltip.Trigger class={buttonVariants({ variant: 'outline' })}>
+							{#snippet child(props)}
+								<Button onclick={() => (filter = !filter)} class="w-32" {...props}>
+									<Icon />Filters
+								</Button>
+							{/snippet}
+						</Tooltip.Trigger>
+						<Tooltip.Content>
+							<p>Filter Products By Categories</p>
+						</Tooltip.Content>
+					</Tooltip.Root>
+				</Tooltip.Provider>
+			{/if}
+
+			{#if filter}
+				<aside class="lg:col-span-1" transition:fade>
+					<div class="sticky top-24 space-y-6">
+						<!-- Filter Header -->
+						<div class="flex items-center justify-between">
+							<h2 class="text-lg font-semibold">Filters</h2>
+							{#if hasActiveFilters}
+								<Button variant="ghost" size="sm" onclick={resetFilters} class="h-8 text-xs">
+									<XIcon size={14} />
+									Reset
+								</Button>
+							{/if}
+						</div>
+
+						<!-- Price Range Filter -->
+						<!-- <div class="flex flex-col gap-4 border-b pb-6">
 						<h3 class="text-sm font-medium">Price Range</h3>
 						<div class="space-y-3">
 							<div class="flex gap-2">
@@ -202,27 +224,28 @@
 								${minPrice.toFixed(0)} - ${maxPrice.toFixed(0)}
 							</p>
 						</div>
-					</div>
+					</div> -->
 
-					<!-- Category Filter -->
-					<div class="flex flex-col gap-4">
-						<h3 class="text-sm font-medium">Categories</h3>
-						{#each categories as category (category)}
-							<div class="flex items-center gap-3">
-								<Checkbox
-									id={`category-${category}`}
-									checked={selectedCategories.includes(category)}
-									onCheckedChange={() => toggleCategory(category)}
-									class="cursor-pointer"
-								/>
-								<Label for={`category-${category}`} class="flex-1 cursor-pointer text-sm">
-									{category}
-								</Label>
-							</div>
-						{/each}
+						<!-- Category Filter -->
+						<div class="flex flex-col gap-4">
+							<h3 class="text-sm font-medium">Categories</h3>
+							{#each categories as category (category)}
+								<div class="flex items-center gap-3" transition:slide|global>
+									<Checkbox
+										id={`category-${category}`}
+										checked={selectedCategories.includes(category)}
+										onCheckedChange={() => toggleCategory(category)}
+										class="cursor-pointer"
+									/>
+									<Label for={`category-${category}`} class="flex-1 cursor-pointer text-sm">
+										{category}
+									</Label>
+								</div>
+							{/each}
+						</div>
 					</div>
-				</div>
-			</aside>
+				</aside>
+			{/if}
 
 			<!-- Products Grid -->
 			<div class="lg:col-span-3">
@@ -232,7 +255,7 @@
 						Showing <span class="font-semibold text-foreground">{resultCount}</span>
 						{resultCount === 1 ? 'product' : 'products'}
 						{searchQuery && `for "${searchQuery}"`}
-						{selectedCategories.length > 0 && `in ${selectedCategories.join(', ')}`}
+						<!-- {selectedCategories.length > 0 && `in ${selectedCategories.join(', ')}`} -->
 					</p>
 				</div>
 
