@@ -1,5 +1,11 @@
 import { db } from '$lib/server/db';
-import { productCategories, products, prices, productImages } from '$lib/server/db/schema';
+import {
+	productCategories,
+	products,
+	prices,
+	productImages,
+	discounts
+} from '$lib/server/db/schema';
 import { eq, sql, min } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
@@ -21,14 +27,18 @@ export const load: LayoutServerLoad = async ({ params }) => {
 		.select({
 			productId: products.id,
 			productName: products.name,
-			price: min(prices.price),
+			price: sql<number>`MIN(${prices.price}) * (1 - COALESCE(${discounts.amount}, 0) / 100)`,
 			description: products.description,
 			category: productCategories.name,
-			image: products.featuredImage
+			image: products.featuredImage,
+			discountPercentage: discounts.amount,
+			discountName: discounts.name,
+			discountDescription: discounts.description
 		})
 		.from(products)
 		.leftJoin(productCategories, eq(productCategories.id, products.categoryId))
 		.leftJoin(prices, eq(prices.productId, products.id))
+		.leftJoin(discounts, eq(discounts.productId, products.id))
 		.where(eq(products.id, Number(id)))
 		.then((rows) => rows[0]);
 
@@ -39,9 +49,10 @@ export const load: LayoutServerLoad = async ({ params }) => {
 	const priceList = await db
 		.select({
 			amount: sql<number>`CAST(${prices.amount} AS SIGNED)`,
-			price: sql<number>`CAST(${prices.price} AS DOUBLE)`
+			price: sql<number>`${prices.price} * (1 - COALESCE(${discounts.amount}, 0) / 100)`
 		})
 		.from(prices)
+		.leftJoin(discounts, eq(discounts.productId, prices.productId))
 		.where(eq(prices.productId, Number(id)));
 
 	return {

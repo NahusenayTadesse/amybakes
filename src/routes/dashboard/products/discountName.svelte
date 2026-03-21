@@ -7,7 +7,10 @@
 		TooltipTrigger
 	} from '$lib/components/ui/tooltip';
 
-	let { discountName, discountDescription } = $props();
+	let {
+		discountName,
+		discountDescription
+	}: { discountName: string | undefined; discountDescription: string | undefined } = $props();
 </script>
 
 {#if discountName}

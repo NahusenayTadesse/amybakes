@@ -58,6 +58,58 @@
 <Hero />
 <About />
 
+{#if data?.discountedProducts.length > 0}
+	<header class="mt-16 text-center">
+		<div class="mb-6 inline-flex items-center rounded-full bg-secondary px-4 py-1.5">
+			<span class="text-xs font-bold tracking-wider text-secondary-foreground uppercase">
+				Discounts
+			</span>
+		</div>
+
+		<h1 class="mb-4 text-4xl font-extrabold tracking-tight text-foreground lg:text-6xl">
+			{data?.discountedProducts[0].name} <span class="text-primary">Discount</span>
+		</h1>
+		{#if data?.discountedProducts[0].description}
+			<p class="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground">
+				{data?.discountedProducts[0].description}
+			</p>
+		{/if}
+	</header>
+
+	<main class="container mx-auto px-4 py-12 pb-24">
+		<section class="mb-16 last:mb-0">
+			<div class="relative px-2">
+				<Carousel.Root
+					opts={{
+						align: 'start',
+						loop: true
+					}}
+					class="w-full"
+				>
+					<Carousel.Content class="-ml-4">
+						{#each data?.productList?.filter( (product) => data?.discountedProducts.some((best) => best.id === product.productId) ) as product (product.productId)}
+							<Carousel.Item class="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+								<div class="group h-full transition-transform duration-300 hover:-translate-y-2">
+									<ProductCard {...product} />
+								</div>
+							</Carousel.Item>
+						{/each}
+					</Carousel.Content>
+
+					<div class="hidden lg:block">
+						<Carousel.Previous
+							class="border-secondary bg-background text-secondary-foreground hover:bg-secondary"
+						/>
+						<Carousel.Next
+							class="border-secondary bg-background text-secondary-foreground hover:bg-secondary"
+						/>
+					</div>
+				</Carousel.Root>
+			</div>
+		</section>
+	</main>
+{/if}
+
 <header class="mt-16 text-center">
 	<div class="mb-6 inline-flex items-center rounded-full bg-secondary px-4 py-1.5">
 		<span class="text-xs font-bold tracking-wider text-secondary-foreground uppercase">

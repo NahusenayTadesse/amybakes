@@ -14,7 +14,7 @@ export const load: PageServerLoad = async () => {
 			name: products.name,
 			image: products.featuredImage,
 			discountName: discounts.name,
-			dicountDescription: discounts.description,
+			discountDescription: discounts.description,
 			discountPercentage: discounts.amount,
 			category: productCategories.name,
 			description: products.description
@@ -51,6 +51,7 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
 	addDiscount: async ({ request, locals }) => {
 		const form = await superValidate(request, zod4(schema));
+		console.log(form);
 
 		if (!form.valid) {
 			// Stay on the same page and set a flash message

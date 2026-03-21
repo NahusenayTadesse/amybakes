@@ -8,9 +8,22 @@
 		CardContent,
 		CardFooter
 	} from '$lib/components/ui/card';
+	import {
+		TooltipProvider,
+		Tooltip,
+		TooltipContent,
+		TooltipTrigger
+	} from '$lib/components/ui/tooltip';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
-	import { PlusIcon, PackageIcon, CheckIcon, ShoppingCartIcon } from '@lucide/svelte';
+	import {
+		PlusIcon,
+		Info,
+		Percent,
+		PackageIcon,
+		CheckIcon,
+		ShoppingCartIcon
+	} from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
 	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select';
 
@@ -22,9 +35,23 @@
 		image?: string;
 		category?: string;
 		priceList: ProductPrice[];
+		discountPercentage?: number | string;
+		discountName?: string;
+		discountDescription?: string;
 	};
 
-	let { productId, productName, price, amount, image, category, priceList }: Props = $props();
+	let {
+		productId,
+		productName,
+		price,
+		amount,
+		image,
+		category,
+		priceList,
+		discountPercentage,
+		discountName,
+		discountDescription
+	}: Props = $props();
 
 	let quantity = $state(1);
 	const item = $derived({
@@ -106,6 +133,35 @@
 					{quantityInCart} in cart
 				</Badge>
 			{/if}
+
+			{#if discountPercentage}
+				<Badge
+					class="absolute top-0 right-1 flex flex-row gap-2 border-none bg-emerald-600 font-bold text-white shadow-lg backdrop-blur-sm dark:bg-emerald-500"
+				>
+					<Percent class="mr-1 h-3.5 w-3.5 stroke-[3px]" />
+					{discountPercentage}% OFF
+
+					{#if discountName}
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger>
+									<Info class="size-4 text-white" />
+								</TooltipTrigger>
+								{#if discountDescription}
+									<TooltipContent>
+										<span class="font-medium">{discountName}</span>
+										<p>{discountDescription}</p>
+									</TooltipContent>
+								{:else}
+									<TooltipContent>
+										<span class="font-medium">{discountName}</span>
+									</TooltipContent>
+								{/if}
+							</Tooltip>
+						</TooltipProvider>
+					{/if}
+				</Badge>
+			{/if}
 		</div>
 	</div>
 
@@ -137,12 +193,14 @@
 							</div>
 							<div class="text-left leading-tight">
 								<div class="font-semibold text-foreground">{amount} Pieces</div>
-								<div class="text-[12px] text-foreground/60">ETB {price}</div>
+								<div class="text-[12px] text-foreground/60">ETB {Number(price).toFixed(2)}</div>
 							</div>
 						</div>
 
 						<div class="text-right leading-tight">
-							<div class="text-sm font-bold text-primary tabular-nums">ETB {price}</div>
+							<div class="text-sm font-bold text-primary tabular-nums">
+								ETB {Number(price).toFixed(2)}
+							</div>
 							<div class="text-[10px] tracking-wider text-foreground/50 uppercase">per pack</div>
 						</div>
 					</div>
@@ -165,7 +223,7 @@
 									</div>
 								</div>
 								<div class="text-right">
-									<div class="font-bold text-primary">ETB {newprice.price}</div>
+									<div class="font-bold text-primary">ETB {Number(newprice.price).toFixed(2)}</div>
 									<div class="text-xs text-foreground/50">
 										{(Number(newprice.price) / Number(newprice.amount)).toFixed(2)}/piece
 									</div>

@@ -2,8 +2,14 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Card, CardContent } from '$lib/components/ui/card';
 	import { Badge } from '$lib/components/ui/badge';
-	import { ShareIcon, PlusIcon, CheckIcon } from '@lucide/svelte';
+	import { ShareIcon, Info, Percent, PlusIcon, CheckIcon } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
+	import {
+		TooltipProvider,
+		Tooltip,
+		TooltipContent,
+		TooltipTrigger
+	} from '$lib/components/ui/tooltip';
 
 	type Props = {
 		productId: number;
@@ -14,10 +20,24 @@
 		category?: string;
 		images?: string[];
 		priceList?: { price: number | string; amount: number | string }[];
+		discountPercentage?: number | string;
+		discountName?: string;
+		discountDescription?: string;
 	};
 
-	const { productId, productName, price, description, image, category, images, priceList }: Props =
-		$props();
+	const {
+		productId,
+		productName,
+		price,
+		description,
+		image,
+		category,
+		images,
+		priceList,
+		discountPercentage,
+		discountName,
+		discountDescription
+	}: Props = $props();
 
 	let quantity = $state(1);
 
@@ -37,7 +57,9 @@
 	// Reusable formatter (performance friendly)
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
-		currency: 'ETB'
+		currency: 'ETB',
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
 	});
 
 	// Derived values for clarity
@@ -99,6 +121,35 @@
 					{#if category}
 						<Badge class="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm">
 							{category}
+						</Badge>
+					{/if}
+
+					{#if discountPercentage}
+						<Badge
+							class="absolute top-0 right-1 flex flex-row gap-2 border-none bg-emerald-600 font-bold text-white shadow-lg backdrop-blur-sm dark:bg-emerald-500"
+						>
+							<Percent class="mr-1 h-3.5 w-3.5 stroke-[3px]" />
+							{discountPercentage}% OFF
+
+							{#if discountName}
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger>
+											<Info class="size-4 text-white" />
+										</TooltipTrigger>
+										{#if discountDescription}
+											<TooltipContent>
+												<span class="font-medium">{discountName}</span>
+												<p>{discountDescription}</p>
+											</TooltipContent>
+										{:else}
+											<TooltipContent>
+												<span class="font-medium">{discountName}</span>
+											</TooltipContent>
+										{/if}
+									</Tooltip>
+								</TooltipProvider>
+							{/if}
 						</Badge>
 					{/if}
 				</div>
@@ -174,7 +225,7 @@
 										? 'text-foreground'
 										: 'text-foreground/80'}"
 								>
-									{product.price} ETB
+									{formatter.format(numericPrice)}
 								</span>
 
 								{#if isActive}

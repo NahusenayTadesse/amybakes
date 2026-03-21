@@ -33,6 +33,8 @@
 		Array.from(new Set(data?.productList.map((p) => p.category).filter(Boolean))).sort()
 	);
 
+	let discounted = $state(false);
+
 	// Filtered products based on search query, price range, and categories
 	const filteredProducts = $derived(
 		data?.productList.filter((product) => {
@@ -40,13 +42,15 @@
 				product.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				product.category?.toLowerCase().includes(searchQuery.toLowerCase());
 
+			const isDiscount =
+				!discounted || (product.discountPercentage && product.discountPercentage > 0);
 			const price = Number(product.price);
 			const matchesPrice = price >= minPrice && price <= maxPrice;
 
 			const matchesCategory =
 				selectedCategories.length === 0 || selectedCategories.includes(product.category || '');
 
-			return matchesSearch && matchesPrice && matchesCategory;
+			return matchesSearch && matchesPrice && matchesCategory && isDiscount;
 		})
 	);
 
@@ -71,6 +75,7 @@
 
 	// Reset all filters
 	const resetFilters = () => {
+		discounted = false;
 		searchQuery = '';
 		minPrice = 0;
 		maxPrice = maxProductPrice;
@@ -79,7 +84,8 @@
 
 	// Check if any filters are active
 	const hasActiveFilters = $derived(
-		searchQuery !== '' ||
+		discounted ||
+			searchQuery !== '' ||
 			minPrice > 0 ||
 			maxPrice < maxProductPrice ||
 			selectedCategories.length > 0
@@ -89,6 +95,9 @@
 	let Icon = $derived(filter ? X : SlidersHorizontal);
 
 	let filter = $state(isMobile() ? false : true);
+	const onDiscountedChange = (checked: boolean) => {
+		discounted = checked;
+	};
 </script>
 
 <svelte:head>
@@ -225,6 +234,23 @@
 							</p>
 						</div>
 					</div> -->
+
+						{#if data?.discountedProducts.length > 0}
+							<div class="flex flex-col gap-4">
+								<h3 class="text-sm font-medium">Discounts</h3>
+								<div class="flex items-center space-x-2">
+									<Checkbox
+										id="discounted"
+										bind:checked={discounted}
+										onCheckedChange={onDiscountedChange}
+									/>
+									<Label for="discounted">Discounted Products Only</Label>
+								</div>
+								<!-- <Button onclick={() => (discounted = !discounted)}>
+								Toggle Discounts ({discounted ? 'On' : 'Off'})
+							</Button> -->
+							</div>
+						{/if}
 
 						<!-- Category Filter -->
 						<div class="flex flex-col gap-4">

@@ -104,7 +104,7 @@ export const columns = [
 
 	{
 		accessorKey: 'discount',
-		header: 'Discount Name',
+		header: 'Discount Percentage',
 		cell: ({ row }) => {
 			// You can pass whatever you need from `row.original` to the component
 			return renderComponent(Discount, {
@@ -124,7 +124,6 @@ export const columns = [
 			});
 		}
 	},
-
 	{
 		accessorKey: 'actions',
 		header: 'Actions',
