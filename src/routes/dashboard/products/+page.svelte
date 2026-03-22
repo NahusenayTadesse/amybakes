@@ -127,7 +127,7 @@
 			<FilterMenu
 				bind:filteredList
 				data={data?.productList}
-				filterKeys={['category', 'discountPercentage', 'discountName']}
+				filterKeys={['category', 'discountPercentage', 'discountName', 'numberOfPrices']}
 			/>
 
 			<DataTable

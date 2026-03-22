@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { products, productCategories, prices, discounts } from '$lib/server/db/schema';
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray, count } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from '../$types';
 import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
@@ -17,11 +17,14 @@ export const load: PageServerLoad = async () => {
 			discountDescription: discounts.description,
 			discountPercentage: discounts.amount,
 			category: productCategories.name,
-			description: products.description
+			description: products.description,
+			numberOfPrices: count(prices.id)
 		})
 		.from(products)
 		.leftJoin(discounts, eq(discounts.productId, products.id))
-		.leftJoin(productCategories, eq(productCategories.id, products.categoryId));
+		.leftJoin(prices, eq(prices.productId, products.id))
+		.leftJoin(productCategories, eq(productCategories.id, products.categoryId))
+		.groupBy(products.id);
 
 	// Then, get prices for those products
 	const productIds = productsData.map((p) => p.id);
