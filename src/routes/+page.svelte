@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { setCart } from '$lib/hooks/cart.svelte.js';
+	import { useCart } from '$lib/hooks/cart.svelte.js';
 
 	import ProductCard from '$lib/components/product-card.svelte';
 
 	// Set app and cart hooks
-	setCart();
+	useCart();
 	let { data } = $props();
 
 	import * as Carousel from '$lib/components/ui/carousel/index.js';
